@@ -27,8 +27,13 @@ import com.accenture.taskmanager.Task;
 @RequestMapping("/api/v1/tasks")
 public class TaskController {
 
-    private static final List<Task> tasks = new ArrayList<>(); // -> medio generado con IA porque ya había escrito hasta
-                                                               // List
+    private static final List<Task> tasks = new ArrayList<>(); // -> medio generado con IA porque ya había escrito hasta List
+
+    // Añadir 2 tareas de ejemplo al ArrayList para poder probar los endpoints -> generado con IA
+    static {
+        tasks.add(new Task(1, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta", java.time.LocalDate.of(2024, 6, 30)));
+        tasks.add(new Task(2, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media", java.time.LocalDate.of(2024, 7, 15)));
+    }
 
     // El Rest Controller debe implementar el endpoint GET para obtener todas las
     // tareas, utilizar ResponseEntity ->generado con IA

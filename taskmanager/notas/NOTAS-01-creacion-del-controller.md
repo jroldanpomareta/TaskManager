@@ -366,6 +366,16 @@ public class Task {
     }
 }
 
+Añadir tareas precargadas en la lista mediante autocompletado:
+
+// Añadir 2 tareas de ejemplo al ArrayList para poder probar los endpoints -> generado con IA
+
+    static {
+        tasks.add(new Task(1, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta", java.time.LocalDate.of(2024, 6, 30)));
+        tasks.add(new Task(2, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media", java.time.LocalDate.of(2024, 7, 15)));
+    }
+
+
 -------------------------------------------------------------------------------------------------------------------------
 Primer comentario:
 
@@ -467,6 +477,8 @@ return ResponseEntity.notFound().build();
 porque así sí devuelve un 204 de sin contenido.
 
 --------------------------------------------------------------------------------------------------------------------------
+Paso 4 – Comprensión del código (Ask):
+
 Pregunta 1:
 
 ¿Qué hace @RequestMapping("/api/v1/tasks") a nivel de clase? ¿Qué ocurriría si lo eliminas?
@@ -626,3 +638,68 @@ Si el JSON está mal formado, Spring no puede deserializarlo y normalmente devue
 Si eliminas @RequestBody, Spring no tratará el contenido como JSON del cuerpo. Intentará resolver Task como un modelo mediante parámetros de la petición, por lo que el JSON puede ignorarse y sus propiedades quedarían con valores null o predeterminados. Además, un JSON mal formado normalmente no produciría el error de conversión esperado, porque Spring no estaría intentando interpretarlo como cuerpo JSON.
 
 -------------------------------------------------------------------------------------------------------------------------
+Paso 5 – Validación en Postman:
+
+Get -> Recuperar todas las tareas
+
+![get](../capturas/Captura-01-creacion-del-controller-postman-1.png)
+
+Get por Id -> Recuperar 1 tarea por su Id
+
+![getId](../capturas/Captura-01-creacion-del-controller-postman-2.png)
+
+Get por Id -> Tarea inexistente
+
+![getIdInexistente](../capturas/Captura-01-creacion-del-controller-postman-3.png)
+
+Post -> Enviar una tarea
+![post](../capturas/Captura-01-creacion-del-controller-postman-4.png)
+
+Put -> Cambiar algo en una tarea
+
+![put](../capturas/Captura-01-creacion-del-controller-postman-5.png)
+
+Put -> Cambiar algo en tarea inexistente
+
+![putInexistente](../capturas/Captura-01-creacion-del-controller-postman-6.png)
+
+Delete -> Borrar una tarea
+
+![delete](../capturas/Captura-01-creacion-del-controller-postman-7.png)
+
+Delete -> Borrar una tarea inexistente
+
+![deleteInexistente](../capturas/Captura-01-creacion-del-controller-postman-8.png)
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Reflexión:
+
+Pregunta 1:
+
+¿Qué responsabilidades tiene el Controller y cuáles NO debe tener?
+
+Respuesta:
+
+Es el punto de entrada de las peticiones HTTP, obtiene los parámetros y los datos del cuerpo de la petición y conecta con el service.
+Lo que no debe de tener es la lógica de negocio ni el acceso a BBDD.
+
+
+
+Pregunta 2:
+
+¿Qué problema tiene tener los datos en una lista dentro del Controller? ¿Qué pasaría si reinicias la aplicación?
+
+Respuesta:
+
+El problema es que se pierden los datos al reiniciar y lo que pasaría es eso, que se pierden porque no hay persistencia.
+
+
+
+Pregunta 3:
+
+¿Qué mejorarías en el diseño actual pensando en los ejercicios siguientes?
+
+Respuesta:
+
+Sustituir la lista del Controller por una BBDD H2 para que no se pierdan los datos.
