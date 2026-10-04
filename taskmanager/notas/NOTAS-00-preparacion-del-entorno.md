@@ -42,16 +42,17 @@ com.ejemplo.taskmanager<br>
 └── model<br>
 <br>
 Clase principal de la aplicación<br>
-Es una clase similar a:<br>
-<br>
-@SpringBootApplication<br>
-public class TaskmanagerApplication {<br>
-<br>
-    public static void main(String[] args) {<br>
-        SpringApplication.run(TaskmanagerApplication.class, args);<br>
-    }<br>
-}<br>
-<br>
+Es una clase similar a:
+```
+@SpringBootApplication
+public class TaskmanagerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(TaskmanagerApplication.class, args);
+    }
+}
+````
+
 Su función es iniciar la aplicación.<br>
 <br>
 main es el punto de entrada de Java.<br>
