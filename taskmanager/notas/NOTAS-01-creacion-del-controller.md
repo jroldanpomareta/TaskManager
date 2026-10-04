@@ -36,17 +36,18 @@ Diferencia entre @Controller y @RestController<br>
 @Controller<br>
 @ResponseBody<br>
 <br>
-Por ejemplo:<br>
-<br>
-@RestController<br>
-public class HelloController {<br>
-<br>
-    @GetMapping("/hello")<br>
-    public String hello() {<br>
-        return "Hola";<br>
-    }<br>
-}<br>
-<br>
+Por ejemplo:
+```
+@RestController
+public class HelloController {
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hola";
+    }
+}
+```
+
 La respuesta será directamente "Hola" en el cuerpo HTTP, en lugar de intentar buscar una vista llamada Hola.<br>
 <br>
 ---
@@ -62,16 +63,18 @@ Una respuesta HTTP está formada principalmente por:<br>
 Código de estado<br>
 Cabeceras<br>
 Cuerpo de la respuesta<br>
-Ejemplo:<br>
-<br>
-HTTP/1.1 200 OK<br>
-Content-Type: application/json<br>
-<br>
-{<br>
-  "id": 1,<br>
-  "title": "Comprar leche"<br>
-}<br>
-<br>
+Ejemplo:
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "Comprar leche"
+}
+```
+
 Código de estado<br>
 Indica el resultado de la petición realizada por el cliente.<br>
 <br>
@@ -100,20 +103,23 @@ Authorization: puede contener información de autenticación, aunque normalmente
 Cuerpo de la respuesta<br>
 El cuerpo contiene los datos que devuelve el servidor. En una API REST suele utilizarse formato JSON, aunque también pueden utilizarse XML u otros formatos.<br>
 <br>
-Por ejemplo:<br>
-<br>
-{<br>
-  "id": 1,<br>
-  "description": "Completar el proyecto",<br>
-  "completed": false<br>
-}<br>
-<br>
-En Spring Boot se puede controlar la respuesta completa utilizando ResponseEntity:<br>
-<br>
-return ResponseEntity<br>
-        .status(HttpStatus.CREATED)<br>
-        .body(task);<br>
-<br>
+Por ejemplo:
+
+```
+{
+  "id": 1,
+  "description": "Completar el proyecto",
+  "completed": false
+}
+```
+En Spring Boot se puede controlar la respuesta completa utilizando ResponseEntity:
+
+```
+return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(task);
+```
+
 En este caso, se devuelve el código 201, las cabeceras correspondientes y el objeto task en el cuerpo de la respuesta.
 
 ---
@@ -159,35 +165,43 @@ DELETE /api/v1/tasks/15<br>
 ¿Por qué versionar una API?<br>
 La versionación permite modificar una API sin romper los clientes que utilizan una versión anterior.<br>
 <br>
-Por ejemplo, si la respuesta de una tarea cambia de:v
-<br>
-{<br>
-  "title": "Comprar leche"<br>
-}<br>
-<br>
-a:<br>
-<br>
-{<br>
-  "name": "Comprar leche",<br>
-  "completed": false<br>
-}<br>
-<br>
+Por ejemplo, si la respuesta de una tarea cambia de:
+
+```
+{
+  "title": "Comprar leche"
+}
+```
+
+a:
+
+```
+{
+  "name": "Comprar leche",
+  "completed": false
+}
+```
+
 los clientes antiguos podrían dejar de funcionar. Una nueva versión permite mantener ambas estructuras durante un periodo de transición.<br>
 <br>
 Principales estrategias de versionado<br>
 1. Versión en la URI<br>
-Es la estrategia más habitual:<br>
-<br>
-/api/v1/tasks<br>
-/api/v2/tasks<br>
-<br>
-En Spring Boot:<br>
-<br>
-@RequestMapping("/api/v1/tasks")<br>
-public class TaskController {<br>
-    // endpoints de la versión 1<br>
-}<br>
-<br>
+Es la estrategia más habitual:
+
+```
+/api/v1/tasks
+/api/v2/tasks
+```
+
+En Spring Boot:
+
+```
+@RequestMapping("/api/v1/tasks")
+public class TaskController {
+    // endpoints de la versión 1
+}
+```
+
 Ventajas:<br>
 <br>
 Es sencilla y fácil de entender.<br>
@@ -235,39 +249,51 @@ Requiere mayor configuración y conocimiento por parte de los clientes.<br>
 Es sencilla, pero suele utilizarse menos porque la versión forma parte de la API y no de los criterios de filtrado del recurso.<br>
 <br>
 Buenas prácticas para diseñar URIs<br>
-Usar sustantivos y no verbos:<br>
-<br>
-/api/v1/tasks<br>
-<br>
-Mejor que:<br>
-<br>
-/api/v1/getTasks<br>
-<br>
-Utilizar nombres en plural para las colecciones:<br>
-<br>
-/api/v1/tasks/15<br>
-<br>
+Usar sustantivos y no verbos:
+
+```
+/api/v1/tasks
+```
+
+Mejor que:
+
+```
+/api/v1/getTasks
+```
+
+Utilizar nombres en plural para las colecciones:
+
+```
+/api/v1/tasks/15
+```
+
 Mantener una nomenclatura coherente.<br>
-Utilizar minúsculas y guiones si fueran necesarios:<br>
-<br>
-/api/v1/task-lists<br>
-<br>
+Utilizar minúsculas y guiones si fueran necesarios:
+
+```
+/api/v1/task-lists
+
+```
+
 Evitar URIs excesivamente profundas.<br>
-Utilizar parámetros de consulta para filtrar, ordenar o paginar:<br>
-<br>
-/api/v1/tasks?completed=false&page=0&size=20<br>
-<br>
+Utilizar parámetros de consulta para filtrar, ordenar o paginar:
+
+```
+/api/v1/tasks?completed=false&page=0&size=20
+```
+
 No incluir información sensible en las URIs.<br>
 Evitar que las URIs dependan de detalles internos de la base de datos.<br>
 Documentar las versiones disponibles.<br>
 Mantener una versión antigua durante un periodo de compatibilidad.<br>
 Informar de la retirada de una versión mediante documentación o cabeceras como Deprecation.<br>
 Recomendación habitual<br>
-Para la mayoría de proyectos, una opción clara es versionar mediante la URI:<br>
-<br>
-/api/v1/tasks<br>
-/api/v2/tasks<br>
-<br>
+Para la mayoría de proyectos, una opción clara es versionar mediante la URI:
+```
+/api/v1/tasks
+/api/v2/tasks
+```
+
 Normalmente se incrementa la versión principal cuando existen cambios incompatibles. Los cambios compatibles, como añadir campos opcionales, no siempre requieren crear una nueva versión.
 
 ---
@@ -295,115 +321,119 @@ DELETE           /api/v1/tasks/{id}      eliminar una tarea.                 204
 Paso 3 - Implementación (autocompletado)<br>
 <br>
 // Crear el modelo Task con los atributos: id, title, description, status, priority, dueDate, incluir sus tipos de datos más adecuados, añadir constructor vacío y por parámetros, añadir getters y setters<br>
-<br>
-public class Task {<br>
-    private int id;<br>
-    private String title;<br>
-    private String description;<br>
-    private String status;<br>
-    private String priority;<br>
-    private java.time.LocalDate dueDate;<br>
-<br>
-    // Constructor vacío<br>
-    public Task() {<br>
-    }<br>
-<br>
-    // Constructor por parámetros<br>
-    public Task(int id, String title, String description, String status, String priority, java.time.LocalDate dueDate) {<br>
-        this.id = id;<br>
-        this.title = title;<br>
-        this.description = description;<br>
-        this.status = status;<br>
-        this.priority = priority;<br>
-        this.dueDate = dueDate;<br>
-    }<br>
-<br>
-    // Getters y Setters<br>
-    public int getId() {<br>
-        return id;<br>
-    }<br>
-<br>
-    public void setId(int id) {<br>
-        this.id = id;<br>
-    }<br>
-<br>
-    public String getTitle() {<br>
-        return title;<br>
-    }<br>
-<br>
-    public void setTitle(String title) {<br>
-        this.title = title;<br>
-    }<br>
-<br>
-    public String getDescription() {<br>
-        return description;<br>
-    }<br>
-<br>
-    public void setDescription(String description) {<br>
-        this.description = description;<br>
-    }<br>
-<br>
-    public String getStatus() {<br>
-        return status;<br>
-    }<br>
-<br>
-    public void setStatus(String status) {<br>
-        this.status = status;<br>
-    }<br>
-<br>
-    public String getPriority() {<br>
-        return priority;<br>
-    }<br>
-<br>
-    public void setPriority(String priority) {<br>
-        this.priority = priority;<br>
-    }<br>
-<br>
-    public java.time.LocalDate getDueDate() {<br>
-        return dueDate;<br>
-    }<br>
-<br>
-    public void setDueDate(java.time.LocalDate dueDate) {<br>
-        this.dueDate = dueDate;<br>
-    }<br>
-}<br>
-<br>
-Añadir tareas precargadas en la lista mediante autocompletado:<br>
-<br>
-// Añadir 2 tareas de ejemplo al ArrayList para poder probar los endpoints -> generado con IA<br>
-<br>
-    static {<br>
-        tasks.add(new Task(1, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta", java.time.LocalDate.of(2024, 6, 30)));<br>
-        tasks.add(new Task(2, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media", java.time.LocalDate.of(2024, 7, 15)));<br>
+
+```
+public class Task {
+    private int id;
+    private String title;
+    private String description;
+    private String status;
+    private String priority;
+    private java.time.LocalDate dueDate;
+
+    // Constructor vacío
+    public Task() {
     }
 
+    // Constructor por parámetros
+    public Task(int id, String title, String description, String status, String priority, java.time.LocalDate dueDate) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.priority = priority;
+        this.dueDate = dueDate;
+    }
+
+    // Getters y Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public java.time.LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(java.time.LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+}
+```
+
+Añadir tareas precargadas en la lista mediante autocompletado:
+```
+// Añadir 2 tareas de ejemplo al ArrayList para poder probar los endpoints -> generado con IA
+
+    static {
+        tasks.add(new Task(1, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta", java.time.LocalDate.of(2024, 6, 30)));
+        tasks.add(new Task(2, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media", java.time.LocalDate.of(2024, 7, 15)));
+    }
+```
 
 ---
 <br>
-Primer comentario:<br>
-<br>
-// El Rest Controller debe implementar el endpoint GET para obtener todas las tareas, utilizar ResponseEntity<br>
-<br>
-@GetMapping("/tasks")<br>
-    public ResponseEntity<Iterable<Task>> getAllTasks() {<br>
-        // Implementar la lógica para obtener todas las tareas<br>
-        return ResponseEntity.ok().build();<br>
-<br>
+Primer comentario:
+```
+// El Rest Controller debe implementar el endpoint GET para obtener todas las tareas, utilizar ResponseEntity
+
+@GetMapping("/tasks")
+    public ResponseEntity<Iterable<Task>> getAllTasks() {
+        // Implementar la lógica para obtener todas las tareas
+        return ResponseEntity.ok().build();
+```
+
 Incidencia: Se quita ("/tasks") porque lo ha puesto mal la ruta porque se ha comido api/v1/ y es más fácil quitarlo que quitarlo del RequestMapping y luego incluir aquí el api/v1/<br>
 Incidencia: Se cambia el return para que devuelva las tasks.
 
 ---
 <br>
-Segundo comentario:<br>
-<br>
-// El Rest Controller debe implementar el endpoint Get para obtener una tarea por ID, utilizar ResponseEntity<br>
-<br>
-@GetMapping("/tasks/{id}") (esto es lo que devolvía originalmente el autocompletado, se cambia por ("/{id}"))<br>
-    public ResponseEntity<Task> getTaskById(int id) {<br>
-        // Implementar la lógica para obtener una tarea por ID<br>
-        return ResponseEntity.ok().build();<br>
-    }<br>
-<br>
+Segundo comentario:
+```
+// El Rest Controller debe implementar el endpoint Get para obtener una tarea por ID, utilizar ResponseEntity
+
+@GetMapping("/tasks/{id}") (esto es lo que devolvía originalmente el autocompletado, se cambia por ("/{id}"))
+    public ResponseEntity<Task> getTaskById(int id) {
+        // Implementar la lógica para obtener una tarea por ID
+        return ResponseEntity.ok().build();
+    }
+```
+
 Incidencia: Se quita ("/tasks") porque lo ha puesto mal la ruta porque se ha comido api/v1/ y es más fácil quitarlo que quitarlo del RequestMapping y luego incluir aquí el api/v1/, se añade ("/{id}") para que se combine.<br>
 Incidencia: Se pone también @PathVariable en int id porque no lo había puesto para decirle que lo coja de la url.<br>
 Incidencia: Al pinchar para poner la lógica y recorrer los tasks aparece sola con el autocompletado.<br>
@@ -411,16 +441,17 @@ Incidencia: El autocompletado dejaba ResponseEntity.ok().build() si no encontrab
 
 ---
 <br>
-Tercer comentario:<br>
-<br>
-// El Rest Controller debe implementar el endpoint POST para crear una tarea, utilizar ResponseEntity<br>
-<br>
-@PostMapping("/tasks")<br>
-    public ResponseEntity<Task> createTask(Task task) {<br>
-        // Implementar la lógica para crear una tarea<br>
-        return ResponseEntity.ok().build();<br>
-    }<br>
-<br>
+Tercer comentario:
+```
+// El Rest Controller debe implementar el endpoint POST para crear una tarea, utilizar ResponseEntity
+
+@PostMapping("/tasks")
+    public ResponseEntity<Task> createTask(Task task) {
+        // Implementar la lógica para crear una tarea
+        return ResponseEntity.ok().build();
+    }
+```
+
 Incidencia: Se quita ("/tasks") porque lo ha puesto mal la ruta porque se ha comido api/v1/ y es más fácil quitarlo que quitarlo del RequestMapping y luego incluir aquí el api/v1/<br>
 Incidencia: Se pone también @RequestBody en Task task para decirle que lo coja del cuerpo de la petición.<br>
 Incidencia: No pone automático el import del @RequestBody, se pone manual.<br>
@@ -429,16 +460,17 @@ Incidencia: Se cambia el return para que en vez de 200 devuelva 201 + tarea crea
 
 ---
 <br>
-Cuarto comentario:<br>
-<br>
-// El Rest Controller debe implementar el endpoint PUT para actualizar una tarea por ID, utilizar ResponseEntity<br>
-<br>
-@PutMapping("/tasks/{id}") (esto es lo que devolvía originalmente el autocompletado, se cambia por ("/{id}"))<br>
-    public ResponseEntity<Task> updateTask(int id, Task task) {<br>
-        // Implementar la lógica para actualizar una tarea por ID<br>
-        return ResponseEntity.ok().build();<br>
-    }<br>
-<br>
+Cuarto comentario:
+```
+// El Rest Controller debe implementar el endpoint PUT para actualizar una tarea por ID, utilizar ResponseEntity
+
+@PutMapping("/tasks/{id}") (esto es lo que devolvía originalmente el autocompletado, se cambia por ("/{id}"))
+    public ResponseEntity<Task> updateTask(int id, Task task) {
+        // Implementar la lógica para actualizar una tarea por ID
+        return ResponseEntity.ok().build();
+    }
+```
+
 Incidencia: Se quita ("/tasks") porque lo ha puesto mal la ruta porque se ha comido api/v1/ y es más fácil quitarlo que quitarlo del RequestMapping y luego incluir aquí el api/v1/, se añade ("/{id}") para que se combine.<br>
 Incidencia: Se ponen también @PathVariable en int id y @RequestBody en Task task para decirle que lo coja del cuerpo de la petición, aquí al empezar a escribir sí que lo puso sólo el autocompletado.<br>
 Incidencia: Al pinchar para poner la lógica y recorrer los tasks aparece sola con el autocompletado.<br>
@@ -446,41 +478,42 @@ Incidencia: El autocompletado dejaba ResponseEntity.ok().build() si no encuentra
 
 ---
 <br>
-Quinto comentario:<br>
-<br>
-// El Rest Controller debe implementar el endpoint DELETE para eliminar una tarea por ID, utilizar ResponseEntity<br>
-<br>
-@DeleteMapping("/tasks/{id}") (esto es lo que devolvía originalmente el autocompletado, se cambia por ("/{id}"))<br>
-    public ResponseEntity<Void> deleteTask(int id) {<br>
-        // Implementar la lógica para eliminar una tarea por ID<br>
-        return ResponseEntity.ok().build();<br>
-    }<br>
-<br>
+Quinto comentario:
+```
+// El Rest Controller debe implementar el endpoint DELETE para eliminar una tarea por ID, utilizar ResponseEntity
+
+@DeleteMapping("/tasks/{id}") (esto es lo que devolvía originalmente el autocompletado, se cambia por ("/{id}"))
+    public ResponseEntity<Void> deleteTask(int id) {
+        // Implementar la lógica para eliminar una tarea por ID
+        return ResponseEntity.ok().build();
+    }
+```
+
 Incidencia: El autocompletado no añade automático el import de @DeteleMapping -> se corrige manual.<br>
 Incidencia: Se quita ("/tasks") porque lo ha puesto mal la ruta porque se ha comido api/v1/ y es más fácil quitarlo que quitarlo del RequestMapping y luego incluir aquí el api/v1/, se añade ("/{id}") para que se combine.<br>
 Incidencia: Se pone @PathVariable en int id para decirle que lo coja de la url.<br>
 Incidencia: Se añaden manualmente también las anotaciones de la clase:<br>
                 @RestController<br>
                 @RequestMapping ("/api/v1/tasks")<br>
-Incidencia: Al pinchar para poner la lógica el autocompletado da esto:<br>
-<br>
-   for (Task task : tasks) {<br>
-            if (task.getId() == id) {<br>
-                tasks.remove(task);<br>
-                return ResponseEntity.ok().build();<br>
-            }<br>
-        }<br>
-pero no vale porque sería un 200 y tiene que ser 204 sin contenido, se pone así:<br>
-<br>
-    for (int i = 0; i < tasks.size(); i++) {<br>
-            if (tasks.get(i).getId() == id) {<br>
-                tasks.remove(i);<br>
-                return ResponseEntity.noContent().build();<br>
-            }<br>
-        }<br>
-<br>
-return ResponseEntity.notFound().build();<br>
-<br>
+Incidencia: Al pinchar para poner la lógica el autocompletado da esto:
+```
+   for (Task task : tasks) {
+            if (task.getId() == id) {
+                tasks.remove(task);
+                return ResponseEntity.ok().build();
+            }
+        }
+```
+pero no vale porque sería un 200 y tiene que ser 204 sin contenido, se pone así:
+```
+    for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).getId() == id) {
+                tasks.remove(i);
+                return ResponseEntity.noContent().build();
+            }
+        }
+return ResponseEntity.notFound().build();
+
 porque así sí devuelve un 204 de sin contenido.
 
 ---
@@ -564,26 +597,30 @@ Respuesta:<br>
 <br>
 @PathVariable vincula una variable de la URI con un parámetro del método.<br>
 <br>
-En este caso:<br>
-<br>
-@GetMapping("/{id}")<br>
-public ResponseEntity<Task> getTaskById(@PathVariable int id) {<br>
-    // ...<br>
-}<br>
-<br>
+En este caso:
+
+```
+@GetMapping("/{id}")
+public ResponseEntity<Task> getTaskById(@PathVariable int id) {
+    // ...
+}
+```
+
 La petición:<br>
 <br>
 GET /api/v1/tasks/5<br>
 <br>
 hace que id tome el valor 5.<br>
 <br>
-Si eliminas @PathVariable:<br>
-<br>
-@GetMapping("/{id}")<br>
-public ResponseEntity<Task> getTaskById(int id) {<br>
-    // ...<br>
-}<br>
-<br>
+Si eliminas @PathVariable:
+
+```
+@GetMapping("/{id}")
+public ResponseEntity<Task> getTaskById(int id) {
+    // ...
+}
+```
+
 Spring ya no sabrá que id debe obtenerse de la ruta. Normalmente intentará obtenerlo de otro lugar, como un parámetro de consulta, y la petición /api/v1/tasks/5 fallará, habitualmente con un 400 Bad Request.<br>
 <br>
 También puede escribirse de forma explícita:<br>
@@ -629,20 +666,21 @@ Respuesta:<br>
 <br>
 @RequestBody indica a Spring que debe leer el cuerpo de la petición y convertir el JSON recibido en un objeto Java.<br>
 <br>
-En tu código:<br>
-<br>
-@PostMapping<br>
-public ResponseEntity<Task> createTask(@RequestBody Task task) {<br>
-    // ...<br>
-}<br>
-<br>
-Un JSON como este se convierte en un objeto Task:<br>
-<br>
-{<br>
-  "id": 1,<br>
-  "title": "Comprar leche"<br>
-}<br>
-<br>
+En tu código:
+```
+@PostMapping
+public ResponseEntity<Task> createTask(@RequestBody Task task) {
+    // ...
+}
+```
+
+Un JSON como este se convierte en un objeto Task:
+```
+{
+  "id": 1,
+  "title": "Comprar leche"
+}
+```
 Si el JSON está mal formado, Spring no puede deserializarlo y normalmente devuelve:<br>
 <br>
 400 Bad Request<br>
