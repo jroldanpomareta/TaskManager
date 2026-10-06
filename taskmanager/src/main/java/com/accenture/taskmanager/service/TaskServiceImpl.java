@@ -44,8 +44,10 @@ public class TaskServiceImpl implements TaskService {
     // pongas PENDIENTE, ni ALTA, ni EN_PROGRESO ni MEDIA.
     // —> generado con IA (sería el comentario genérico para que actualizara pero con los null en campos nuevos ya no aplica)
     private static final List<Task> tasks = new ArrayList<>();
+
     static {
-        tasks.add(new Task(1L, "Tarea 1", "Descripción de la tarea 1", // esto no lo he sacado a constantes porque has dicho que no toquemos nada de aquí pero sí que me acuerdo eh?
+        tasks.add(new Task(1L, "Tarea 1", "Descripción de la tarea 1",
+                // esto no lo he sacado a constantes porque has dicho que no toquemos nada de aquí pero sí que me acuerdo eh?
                 TaskStatus.PENDING, TaskPriority.LOW,
                 java.time.LocalDate.of(2024, 6, 30), null, null));
 
