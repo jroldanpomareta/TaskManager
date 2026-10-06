@@ -1,7 +1,7 @@
 package com.accenture.taskmanager.service.interfaces;
 
-import com.accenture.taskmanager.Task;
 import com.accenture.taskmanager.exceptions.TaskNotFoundException;
+import com.accenture.taskmanager.model.Task;
 
 /**
  * Interfaz que define las operaciones de servicio para gestionar las tareas.
@@ -25,7 +25,7 @@ public interface TaskService {
      * @param id identificador de la tarea que se desea buscar.
      * @return la tarea encontrada o null si no existe.
      */
-    Task findById(int id);
+    Task findById(Long id);
 
     /**
      * Crea una nueva tarea.
@@ -42,7 +42,7 @@ public interface TaskService {
      * @param task datos actualizados de la tarea.
      * @return la tarea actualizada o null si no existe.
      */
-    Task update(int id, Task task);
+    Task update(Long id, Task task);
 
     /**
      * Elimina una tarea por su identificador.
@@ -50,5 +50,5 @@ public interface TaskService {
      * @param id identificador de la tarea que se desea eliminar.
      * @throws TaskNotFoundException si no existe una tarea con el identificador indicado.
      */
-    void delete(int id);
+    void delete(Long id);
 }

@@ -15,20 +15,22 @@ Aplicar reglas de negocio.<br>
 Mantener los controladores simples.<br>
 Reutilizar lógica desde distintos puntos de la aplicación.<br>
 Gestionar transacciones cuando es necesario.<br>
-Se identifica normalmente con @Service:<br>
-<br>
-package com.ejemplo.taskmanager.service;<br>
-<br>
-import org.springframework.stereotype.Service;<br>
-<br>
-@Service<br>
-public class TareaService {<br>
+Se identifica normalmente con @Service:
+
+```
+package com.ejemplo.taskmanager.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class TareaService {
 
     public String obtenerMensaje() {
         return "Servicio de tareas activo";
     }
-}<br>
-<br>
+}
+```
+
 El flujo habitual es:<br>
 <br>
 Controller → Service → Repository → Base de datos<br>
@@ -52,24 +54,26 @@ El flujo habitual es:<br>
 <br>
 Cliente → Controller → Service → Repository<br>
 <br>
-Ejemplo:<br>
-<br>
-@RestController<br>
-@RequestMapping("/tareas")<br>
-public class TareaController {<br>
-<br>
-    private final TareaService tareaService;<br>
-<br>
-    public TareaController(TareaService tareaService) {<br>
-        this.tareaService = tareaService;<br>
-    }<br>
-<br>
-    @GetMapping("/{id}")<br>
-    public Tarea obtener(@PathVariable Long id) {<br>
-        return tareaService.obtenerPorId(id);<br>
-    }<br>
-}<br>
-<br>
+Ejemplo:
+
+```
+@RestController
+@RequestMapping("/tareas")
+public class TareaController {
+
+    private final TareaService tareaService;
+
+    public TareaController(TareaService tareaService) {
+        this.tareaService = tareaService;
+    }
+
+    @GetMapping("/{id}")
+    public Tarea obtener(@PathVariable Long id) {
+        return tareaService.obtenerPorId(id);
+    }
+}
+```
+
 El Controller no debería contener reglas como comprobar permisos, calcular datos o decidir cómo guardar una tarea. Esa lógica debe estar en el Service.
 
 ---
@@ -80,24 +84,26 @@ Pregunta:<br>
 <br>
 Respuesta:<br>
 <br>
-Un Service se inyecta en un Controller mediante inyección de dependencias, normalmente usando el constructor.<br>
-<br>
-@RestController<br>
-@RequestMapping("/tareas")<br>
-public class TareaController {<br>
-<br>
-    private final TareaService tareaService;<br>
-<br>
-    public TareaController(TareaService tareaService) {<br>
-        this.tareaService = tareaService;<br>
-    }<br>
-<br>
-    @GetMapping<br>
-    public List<Tarea> listar() {<br>
-        return tareaService.listar();<br>
-    }<br>
-}<br>
-<br>
+Un Service se inyecta en un Controller mediante inyección de dependencias, normalmente usando el constructor.
+
+```
+@RestController
+@RequestMapping("/tareas")
+public class TareaController {
+
+    private final TareaService tareaService;
+
+    public TareaController(TareaService tareaService) {
+        this.tareaService = tareaService;
+    }
+
+    @GetMapping
+    public List<Tarea> listar() {
+        return tareaService.listar();
+    }
+}
+```
+
 Spring detecta @Service, crea una instancia de TareaService y la proporciona automáticamente al construir TareaController.<br>
 <br>
 Se hace así porque:<br>
@@ -164,175 +170,193 @@ Respuesta:<br>
 <br>
 Paso 3 - Implementación (autocompletado):<br>
 <br>
-Creación de TaskService.java:<br>
-<br>
-// Crear la interfaz TaskService que tenga los métodos findAll, findById, create, update y delete para la lógica de negocio de las tareas. ->generado con IA<br>
-<br>
-public interface TaskService {<br>
-    Iterable<Task> findAll();<br>
-    Task findById(Long id); -> esto lo puso mal, se cambia por int id<br>
-    Task create(Task task);<br>
-    Task update(Long id, Task task); -> esto lo puso mal, se cambia por int id<br>
-    void delete(Long id); -> esto lo puso mal, se cambia por int id<br>
-}<br>
-<br>
+Creación de TaskService.java:
+
+```
+// Crear la interfaz TaskService que tenga los métodos findAll, findById, create, update y delete para la lógica de negocio de las tareas. ->generado con IA
+
+public interface TaskService {
+    Iterable<Task> findAll();
+    Task findById(Long id); -> esto lo puso mal, se cambia por Long id
+    Task create(Task task);
+    Task update(Long id, Task task); -> esto lo puso mal, se cambia por Long id
+    void delete(Long id); -> esto lo puso mal, se cambia por Long id
+}
+```
+
 Incidencia: Se cambian los tipos Long por id que es el que se usa porque los ha puesto mal.
 
 ---
 <br>
 Creación de TraskSeriveImpl.java:<br>
 <br>
-No se emplea ningún comentario para la implementación de los métodos porque al poner "implements" para traer la interfaz el autocompletado me lo puso todo él sólo de una.<br>
-<br>
-public class TaskServiceImpl implements TaskService {<br>
-    // Implementación de los métodos de la interfaz TaskService<br>
-    <br>
-    (este comentario le escribió la IA pero como he explicado antes no lo marco como generado por IA porque el que se marca es el prompt a modo de comentario que es el que da lugar a él)<br>
-    <br>
-    @Override<br>
-    public Iterable<Task> findAll() {<br>
-        // Lógica para obtener todas las tareas<br>
-        <br>
-        (los comentarios que pone la IA no he puesto lo de "generado por IA porque lo pone arriba en el comentario que se usa de prompt y los genera)<br>
-        <br>
-        return null; // Reemplazar con la implementación real<br>
-    }<br>
-<br>
-    @Override<br>
-    public Task findById(int id) {<br>
-        // Lógica para encontrar una tarea por su ID<br>
-        return null; // Reemplazar con la implementación real<br>
-    }<br>
-<br>
-    @Override<br>
-    public Task create(Task task) {<br>
-        // Lógica para crear una nueva tarea<br>
-        return null; // Reemplazar con la implementación real<br>
-    }<br>
-<br>
-    @Override<br>
-    public Task update(int id, Task task) {<br>
-        // Lógica para actualizar una tarea existente<br>
-        return null; // Reemplazar con la implementación real<br>
-    }<br>
-<br>
-    @Override<br>
-    public void delete(int id) {<br>
-        // Lógica para eliminar una tarea por su ID<br>
-        // Reemplazar con la implementación real<br>
-    }<br>
-<br>
+No se emplea ningún comentario para la implementación de los métodos porque al poner "implements" para traer la interfaz el autocompletado me lo puso todo él sólo de una.
+
+```
+public class TaskServiceImpl implements TaskService {
+    // Implementación de los métodos de la interfaz TaskService
+    
+    (este comentario le escribió la IA pero como he explicado antes no lo marco como generado por IA porque el que se marca es el prompt a modo de comentario que es el que da lugar a él)
+    
+    @Override
+    public Iterable<Task> findAll() {
+        // Lógica para obtener todas las tareas
+        
+        (los comentarios que pone la IA no he puesto lo de "generado por IA porque lo pone arriba en el comentario que se usa de prompt y los genera)
+        
+        return null; // Reemplazar con la implementación real
+    }
+
+    @Override
+    public Task findById(Long id) {
+        // Lógica para encontrar una tarea por su ID
+        return null; // Reemplazar con la implementación real
+    }
+
+    @Override
+    public Task create(Task task) {
+        // Lógica para crear una nueva tarea
+        return null; // Reemplazar con la implementación real
+    }
+
+    @Override
+    public Task update(Long id, Task task) {
+        // Lógica para actualizar una tarea existente
+        return null; // Reemplazar con la implementación real
+    }
+
+    @Override
+    public void delete(Long id) {
+        // Lógica para eliminar una tarea por su ID
+        // Reemplazar con la implementación real
+    }
+
 }
+```
 
 ---
 <br>
 Creación de la lógica en el Service:<br>
 <br>
-Primero se crea un duplicado de la lista y las tareas de TaskController para cogerla de ahí con los métodos porque sino tiraría de la otra.<br>
-<br>
-    // Crea una lista igual que en el controlador para simular la persistencia de datos y añade 2 tareas de ejemplo<br>
-    // al ArrayList usando el constructor de la clase Task para poder probar los endpoints -> generado con IA<br>
-    private static final List<Task> tasks = new ArrayList<>();<br>
-    static {<br>
-        tasks.add(new Task(1, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta", java.time.LocalDate.of(2024, 6, 30)));<br>
-        tasks.add(new Task(2, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media", java.time.LocalDate.of(2024, 7, 15)));<br>
+Primero se crea un duplicado de la lista y las tareas de TaskController para cogerla de ahí con los métodos porque sino tiraría de la otra.
+
+```
+    // Crea una lista igual que en el controlador para simular la persistencia de datos y añade 2 tareas de ejemplo
+    // al ArrayList usando el constructor de la clase Task para poder probar los endpoints -> generado con IA
+    private static final List<Task> tasks = new ArrayList<>();
+    static {
+        tasks.add(new Task(1, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta", java.time.LocalDate.of(2024, 6, 30)));
+        tasks.add(new Task(2, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media", java.time.LocalDate.of(2024, 7, 15)));
     }
+```
 
 ---
 <br>
-Se crea la inyección por constructor de TaskServiceImpl a través de la interfaz TaskService mediante autocompletado:<br>
-<br>
-// Crea una inyección de dependencias para el service, usa la interfaz TaskService y la clase TaskServiceImpl, y utiliza el service para implementar los endpoints del controlador -> generado con IA<br>
-public class TaskController {<br>
-<br>
-    private final TaskService taskService;<br>
-<br>
-    public TaskController(TaskService taskService) {<br>
-        this.taskService = taskService;<br>
+Se crea la inyección por constructor de TaskServiceImpl a través de la interfaz TaskService mediante autocompletado:
+
+```
+// Crea una inyección de dependencias para el service, usa la interfaz TaskService y la clase TaskServiceImpl, y utiliza el service para implementar los endpoints del controlador -> generado con IA
+public class TaskController {
+
+    private final TaskService taskService;
+
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
     }
+```
 
 ---
 <br>
-Se comentan la lista estática y las tareas de prueba de TaskController:<br>
-<br>
-   // private static final List<Task> tasks = new ArrayList<>(); // -> medio generado con IA porque ya había escrito hasta List<br>
-<br>
-    // Añadir 2 tareas de ejemplo al ArrayList para poder probar los endpoints -> generado con IA<br>
-   /* static {<br>
-        tasks.add(new Task(1, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta", java.time.LocalDate.of(2024, 6, 30)));<br>
-        tasks.add(new Task(2, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media", java.time.LocalDate.of(2024, 7, 15)));<br>
+Se comentan la lista estática y las tareas de prueba de TaskController:
+
+```
+   // private static final List<Task> tasks = new ArrayList<>(); // -> medio generado con IA porque ya había escrito hasta List
+
+    // Añadir 2 tareas de ejemplo al ArrayList para poder probar los endpoints -> generado con IA
+   /* static {
+        tasks.add(new Task(1, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta", java.time.LocalDate.of(2024, 6, 30)));
+        tasks.add(new Task(2, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media", java.time.LocalDate.of(2024, 7, 15)));
     }*/
-
+```
 ---
 
 Se comentan los métodos que había en TaskController (no lo pego aquí porque son muchas líneas y es sólo comentar)
 ---
 <br>
-Método findAll:<br>
-<br>
-   // Implementación de los métodos de la interfaz TaskService(estos comentarios no los borro porque dijiste que teníamos que dejar todos, no se marca como generado por IA porque le escribe la propia IA y es consecuencia del prompt que se usó para generarlo que sí está marcado como generado por IA)<br>
-    @Override<br>
-    public Iterable<Task> findAll() {<br>
-        // Lógica para encontrar una tarea por su ID (estos comentarios no los borro porque dijiste que teníamos que dejar todos, no se marca como generado por IA porque le escribe la propia IA y es consecuencia del prompt que se usó para generarlo que sí está marcado como generado por IA)<br>
-        // Obtener todas las tareas y devolverlas como un Iterable<Task> -> generado con IA<br>
-            return tasks; // Reemplazar con la implementación real<br>
-    }
+Método findAll:
 
----
-<br>
-Método findById:<br>
-<br>
-    @Override<br>
-    public Task findById(int id) {<br>
-        // Lógica para encontrar una tarea por su ID<br>
-        // Buscar la tarea en la lista de tareas por su ID y devolverla -> generado con IA<br>
-        for (Task task : tasks) {<br>
-            if (task.getId() == id) {<br>
-                return task; // Reemplazar con la implementación real<br>
-            }<br>
-        }<br>
-        return null; // Reemplazar con la implementación real<br>
-    }
-
----
-<br>
-Método create:<br>
-<br>
-    @Override<br>
-    public Task create(Task task) {<br>
-        // Lógica para crear una nueva tarea<br>
-        // Añadir la tarea nueva a la lista de tareas y devolverla en el return -> generado con IA<br>
-        tasks.add(task);<br>
-        return task; // Reemplazar con la implementación real<br>
-    }
-
----
-<br>
-Método update<br>
-<br>
-    @Override<br>
-    public Task update(int id, Task task) {<br>
-        // Lógica para actualizar una tarea existente<br>
-        // Buscar la tarea en la lista de tareas por su ID y actualizar sus campos con los valores del objeto task -> generado con IA<br>
-        for (Task existingTask : tasks) {<br>
-            if (existingTask.getId() == id) {<br>
-                existingTask.setTitle(task.getTitle());<br>
-                existingTask.setDescription(task.getDescription());<br>
-                existingTask.setStatus(task.getStatus());<br>
-                existingTask.setPriority(task.getPriority());<br>
-                existingTask.setDueDate(task.getDueDate());<br>
-                return existingTask; // Reemplazar con la implementación real<br>
-            }<br>
-        }<br>
-        return null; // Reemplazar con la implementación real<br>
-    }
-
----
-<br>
-Método delete:<br>
-<br>
+```
+   // Implementación de los métodos de la interfaz TaskService(estos comentarios no los borro porque dijiste que teníamos que dejar todos, no se marca como generado por IA porque le escribe la propia IA y es consecuencia del prompt que se usó para generarlo que sí está marcado como generado por IA)
     @Override
-    public void delete(int id) {
+    public Iterable<Task> findAll() {
+        // Lógica para encontrar una tarea por su ID (estos comentarios no los borro porque dijiste que teníamos que dejar todos, no se marca como generado por IA porque le escribe la propia IA y es consecuencia del prompt que se usó para generarlo que sí está marcado como generado por IA)
+        // Obtener todas las tareas y devolverlas como un Iterable<Task> -> generado con IA
+            return tasks; // Reemplazar con la implementación real
+    }
+```
+
+---
+<br>
+Método findById:
+
+```
+    @Override
+    public Task findById(Long id) {
+        // Lógica para encontrar una tarea por su ID
+        // Buscar la tarea en la lista de tareas por su ID y devolverla -> generado con IA
+        for (Task task : tasks) {
+            if (task.getId().equals(id)) {
+                return task; // Reemplazar con la implementación real
+            }
+        }
+        return null; // Reemplazar con la implementación real
+    }
+```
+
+---
+<br>
+Método create:
+
+```
+    @Override
+    public Task create(Task task) {
+        // Lógica para crear una nueva tarea
+        // Añadir la tarea nueva a la lista de tareas y devolverla en el return -> generado con IA
+        tasks.add(task);
+        return task; // Reemplazar con la implementación real
+    }
+```
+
+---
+<br>
+Método update:
+
+```
+    @Override
+    public Task update(Long id, Task task) {
+        // Lógica para actualizar una tarea existente
+        // Buscar la tarea en la lista de tareas por su ID y actualizar sus campos con los valores del objeto task -> generado con IA
+        for (Task existingTask : tasks) {
+            if (existingTask.getId().equals(id)) {
+                existingTask.setTitle(task.getTitle());
+                existingTask.setDescription(task.getDescription());
+                existingTask.setStatus(task.getStatus());
+                existingTask.setPriority(task.getPriority());
+                existingTask.setDueDate(task.getDueDate());
+                return existingTask; // Reemplazar con la implementación real
+            }
+        }
+        return null; // Reemplazar con la implementación real
+    }
+```
+
+---
+<br>
+Método delete:
+
+```
+    @Override
+    public void delete(Long id) {
         // Lógica para eliminar una tarea por su ID
         // Eliminar una tarea de la lista de tareas por su ID, comprobar antes si la tarea existe y si no existe lanzar una excepción -> generado con IA
         Task taskToDelete = findById(id);
@@ -343,6 +367,7 @@ Método delete:<br>
         }        
       
     }
+```
 
     Aquí he tenido que meter una excepción para que se pueda comprobar de alguna forma el 404 de que no exista la task porque sino habría tenido que quitar el void y en el pdf pone que no se puede cambiar la lógica.
 
@@ -352,50 +377,52 @@ Se borra lo que se había comentado en TaskController (no lo pego aquí porque n
 
 ---
 <br>
-Se crean los métodos para traer la lógica desde el Service:<br>
-<br>
-    // Traer los métodos findAll, findById, create, update y delete, del service para implementar los endpoints del controlador -> generado con IA<br>
-    @GetMapping<br>
-    public ResponseEntity<Iterable<Task>> getAllTasks() {<br>
-        Iterable<Task> tasks = taskService.findAll();<br>
-        return new ResponseEntity<>(tasks, HttpStatus.OK);<br>
-    }<br>
-<br>
-    @GetMapping("/{id}")<br>
-    public ResponseEntity<Task> getTaskById(@PathVariable int id) {<br>
-        Task task = taskService.findById(id);<br>
-        if (task != null) {<br>
-            return new ResponseEntity<>(task, HttpStatus.OK);<br>
-        } else {<br>
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);<br>
-        }<br>
-    }<br>
-<br>
-    @PostMapping<br>
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {<br>
-        Task createdTask = taskService.create(task);<br>
-        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);<br>
-    }<br>
-<br>
-    @PutMapping("/{id}")<br>
-    public ResponseEntity<Task> updateTask(@PathVariable int id, @RequestBody Task task) {<br>
-        Task updatedTask = taskService.update(id, task);<br>
-        if (updatedTask != null) {<br>
-            return new ResponseEntity<>(updatedTask, HttpStatus.OK);<br>
-        } else {<br>
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);<br>
-        }<br>
-    }<br>
-<br>
-    @DeleteMapping("/{id}")<br>
-    public ResponseEntity<Void> deleteTask(@PathVariable int id) {<br>
-        try {<br>
-            taskService.delete(id);<br>
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);<br>
-        } catch (IllegalArgumentException e) {<br>
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);<br>
-        }<br>
+Se crean los métodos para traer la lógica desde el Service:
+
+```
+    // Traer los métodos findAll, findById, create, update y delete, del service para implementar los endpoints del controlador -> generado con IA
+    @GetMapping
+    public ResponseEntity<Iterable<Task>> getAllTasks() {
+        Iterable<Task> tasks = taskService.findAll();
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        Task task = taskService.findById(id);
+        if (task != null) {
+            return new ResponseEntity<>(task, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        Task createdTask = taskService.create(task);
+        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
+        Task updatedTask = taskService.update(id, task);
+        if (updatedTask != null) {
+            return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        try {
+            taskService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+```
 
 ---
 <br>
@@ -433,14 +460,16 @@ Hace más visibles las dependencias de la clase.<br>
 Evita el acoplamiento y las limitaciones de @Autowired directamente en campos.<br>
 Si falta el bean, la aplicación falla al arrancar inmediatamente.<br>
 <br>
-Ejemplo:<br>
-<br>
-private final TaskService taskService;<br>
-<br>
-public TaskController(TaskService taskService) {<br>
-    this.taskService = taskService;<br>
-}<br>
-<br>
+Ejemplo:
+
+```
+private final TaskService taskService;
+
+public TaskController(TaskService taskService) {
+    this.taskService = taskService;
+}
+```
+
 En Spring moderno, si existe un único constructor, no es necesario añadir @Autowired.
 
 ---
@@ -467,7 +496,7 @@ Pregunta: (esto es anterior al cambio a excepción personalizada)<br>
 ¿Qué tipo de excepción se lanza cuando no se encuentra una tarea? ¿Dónde se captura esa excepción ahora mismo?<br>
 Respuesta:<br>
 <br>
-En TaskServiceImpl, el método delete(int id) lanza una excepción:<br>
+En TaskServiceImpl, el método delete(Long id) lanza una excepción:<br>
 <br>
 throw new IllegalArgumentException("La tarea con ID " + id + " no existe.");<br>
 <br>
@@ -485,7 +514,7 @@ Pregunta: (esto es posterior al cambio a excepción personalizada)<br>
 ¿Qué tipo de excepción se lanza cuando no se encuentra una tarea? ¿Dónde se captura esa excepción ahora mismo?<br>
 Respuesta:<br>
 <br>
-En TaskServiceImpl, el método delete(int id) lanza una excepción personalizada:<br>
+En TaskServiceImpl, el método delete(Long id) lanza una excepción personalizada:<br>
 <br>
 throw new TaskNotFoundException("La tarea con ID " + id + " no existe.");<br>
 <br>
@@ -516,12 +545,14 @@ Se puede indicar cuál usar de varias formas:<br>
 Con @Primary, marcando una implementación como predeterminada.<br>
 Con @Qualifier, especificando el nombre del bean.<br>
 Usando perfiles con @Profile, activando solo una implementación según el entorno.<br>
-Por ejemplo:<br>
-<br>
-public TaskController(@Qualifier("taskServiceImpl") TaskService taskService) {<br>
-    this.taskService = taskService;<br>
-}<br>
-<br>
+Por ejemplo:
+
+```
+public TaskController(@Qualifier("taskServiceImpl") TaskService taskService) {
+    this.taskService = taskService;
+}
+```
+
 Así, el Controller sigue dependiendo de la interfaz, pero Spring selecciona explícitamente la implementación indicada.
 
 ---
@@ -593,63 +624,69 @@ Otros:<br>
 <br>
 Transformación de la excepción de tarea no encontrada en excepción personalizada:<br>
 <br>
-Primero se crea el paquete exceptions y se añade un comentario para que lo haga el autocompletado:<br>
-<br>
-package com.accenture.taskmanager.exceptions;<br>
-<br>
-// Crear una excepción personalizada TaskNotFoundException para indicar que una tarea no existe -> generado con IA<br>
-public class TaskNotFoundException extends RuntimeException {<br>
-<br>
-    public TaskNotFoundException(String message) {<br>
-        super(message);<br>
-    }<br>
-<br>
-}<br>
-<br>
-Luego se añade otro comentario en TaskServiceImpl en el método delete para que autocompletar cambie la excepción y ponga esta y se actualiza el javadoc:<br>
-<br>
-    /**<br>
-     * Elimina una tarea por su identificador.<br>
-     *<br>
-     * @param id identificador de la tarea que se desea eliminar.<br>
-     * @throws TaskNotFoundException si no existe una tarea con el identificador<br>
-     *                               indicado.<br>
-     */<br>
-    @Override<br>
-    public void delete(int id) {<br>
-        // Lógica para eliminar una tarea por su ID<br>
-        // Eliminar una tarea de la lista de tareas por su ID, comprobar antes si la<br>
-        // tarea existe y si no existe lanzar una excepción -> generado con IA<br>
-        // Cambia la excepción lanzada a TaskNotFoundException para indicar que la tarea<br>
-        // no existe<br>
-        Task taskToDelete = findById(id);<br>
-        if (taskToDelete != null) {<br>
-            tasks.remove(taskToDelete);<br>
-        } else {<br>
-            throw new TaskNotFoundException("La tarea con ID " + id + " no existe.");<br>
-        }<br>
-<br>
-    }<br>
-<br>
-Luego se modifica el catch del deleteTask del TaskController con autocompletar para que use la excepción personalizada.<br>
-En este el javadoc me le dió automático el cambio el autocompletar.<br>
-<br>
-    /**<br>
-     * Elimina una tarea mediante su identificador.<br>
-     *<br>
-     * @param id identificador de la tarea que se desea eliminar.<br>
-     * @throws TaskNotFoundException si no existe una tarea con el identificador<br>
-     *                               indicado.<br>
-     * @return respuesta HTTP con estado 204 NO_CONTENT si se elimina correctamente,<br>
-     *         o estado 404 NOT_FOUND si la tarea no existe.<br>
-     */<br>
-    // modifica el método deleteTask para que capture la excepción TaskNotFoundException y devuelva un estado 404 NOT_FOUND en lugar de IllegalArgumentException -> generado con IA<br>
-    @DeleteMapping("/{id}")<br>
-    public ResponseEntity<Void> deleteTask(@PathVariable int id) {<br>
-        try {<br>
-            taskService.delete(id);<br>
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);<br>
-        } catch (TaskNotFoundException e) {<br>
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);<br>
-        }<br>
+Primero se crea el paquete exceptions y se añade un comentario para que lo haga el autocompletado:
+
+```
+package com.accenture.taskmanager.exceptions;
+
+// Crear una excepción personalizada TaskNotFoundException para indicar que una tarea no existe -> generado con IA
+public class TaskNotFoundException extends RuntimeException {
+
+    public TaskNotFoundException(String message) {
+        super(message);
     }
+
+}
+```
+
+Luego se añade otro comentario en TaskServiceImpl en el método delete para que autocompletar cambie la excepción y ponga esta y se actualiza el javadoc:
+
+```
+    /**
+     * Elimina una tarea por su identificador.
+     *
+     * @param id identificador de la tarea que se desea eliminar.
+     * @throws TaskNotFoundException si no existe una tarea con el identificador
+     *                               indicador
+     */
+    @Override
+    public void delete(Long id) {
+        // Lógica para eliminar una tarea por su ID
+        // Eliminar una tarea de la lista de tareas por su ID, comprobar antes si la
+        // tarea existe y si no existe lanzar una excepción -> generado con IA
+        // Cambia la excepción lanzada a TaskNotFoundException para indicar que la tarea
+        // no existe
+        Task taskToDelete = findById(id);
+        if (taskToDelete != null) {
+            tasks.remove(taskToDelete);
+        } else {
+            throw new TaskNotFoundException("La tarea con ID " + id + " no existe.");
+        }
+
+    }
+```
+
+Luego se modifica el catch del deleteTask del TaskController con autocompletar para que use la excepción personalizada.<br>
+En este el javadoc me le dió automático el cambio el autocompletar.
+
+```
+    /**
+     * Elimina una tarea mediante su identificador.
+     *
+     * @param id identificador de la tarea que se desea eliminar.
+     * @throws TaskNotFoundException si no existe una tarea con el identificador
+     *                               indicado.
+     * @return respuesta HTTP con estado 204 NO_CONTENT si se elimina correctamente,
+     *         o estado 404 NOT_FOUND si la tarea no existe.
+     */
+    // modifica el método deleteTask para que capture la excepción TaskNotFoundException y devuelva un estado 404 NOT_FOUND en lugar de IllegalArgumentException -> generado con IA
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        try {
+            taskService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (TaskNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    ```

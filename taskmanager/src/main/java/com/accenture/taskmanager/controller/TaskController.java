@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.accenture.taskmanager.Task;
 import com.accenture.taskmanager.exceptions.TaskNotFoundException;
+import com.accenture.taskmanager.model.Task;
 import com.accenture.taskmanager.service.interfaces.TaskService;
 
 /**
@@ -31,6 +31,11 @@ public class TaskController {
     // los endpoints del controlador
     private final TaskService taskService;
 
+    /**
+     * Crea el controlador de tareas e inyecta el servicio.
+     *
+     * @param taskService servicio encargado de gestionar las tareas
+     */
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
@@ -56,7 +61,7 @@ public class TaskController {
      *         o estado 404 NOT_FOUND si no existe.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable int id) {
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
         Task task = taskService.findById(id);
         if (task != null) {
             return new ResponseEntity<>(task, HttpStatus.OK);
@@ -86,7 +91,7 @@ public class TaskController {
      *         o estado 404 NOT_FOUND si no existe.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable int id, @RequestBody Task task) {
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
         Task updatedTask = taskService.update(id, task);
         if (updatedTask != null) {
             return new ResponseEntity<>(updatedTask, HttpStatus.OK);
@@ -104,9 +109,11 @@ public class TaskController {
      * @return respuesta HTTP con estado 204 NO_CONTENT si se elimina correctamente,
      *         o estado 404 NOT_FOUND si la tarea no existe.
      */
-    // modifica el método deleteTask para que capture la excepción TaskNotFoundException y devuelva un estado 404 NOT_FOUND en lugar de IllegalArgumentException -> generado con IA
+    // modifica el método deleteTask para que capture la excepción
+    // TaskNotFoundException y devuelva un estado 404 NOT_FOUND en lugar de
+    // IllegalArgumentException -> generado con IA
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable int id) {
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         try {
             taskService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

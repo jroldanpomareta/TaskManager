@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.accenture.taskmanager.Task;
+import com.accenture.taskmanager.enums.TaskPriority;
+import com.accenture.taskmanager.enums.TaskStatus;
 import com.accenture.taskmanager.exceptions.TaskNotFoundException;
+import com.accenture.taskmanager.model.Task;
 import com.accenture.taskmanager.service.interfaces.TaskService;
 
 /**
@@ -29,12 +31,27 @@ public class TaskServiceImpl implements TaskService {
     // datos y añade 2 tareas de ejemplo
     // al ArrayList usando el constructor de la clase Task para poder probar los
     // endpoints -> generado con IA
+    // Actualiza las tareas de ejemplo para adaptarlas al nuevo constructor de Task,
+    // Para los valores de status, consulta directamente el archivo
+    // src/main/java/com/accenture/taskmanager/enums/TaskStatus.java y utiliza
+    // exactamente
+    // los nombres de los enums declarados allí, sin traducirlos ni inventarlos.
+    // Para los valores de priority, consulta directamente el archivo
+    // src/main/java/com/accenture/taskmanager/enums/TaskPriority.java y utiliza
+    // exactamente
+    // los nombres de los enums declarados allí, sin traducirlos ni inventarlos.
+    // Añade también los valores correspondientes a createdAt y categoryId, no
+    // pongas PENDIENTE, ni ALTA, ni EN_PROGRESO ni MEDIA.
+    // —> generado con IA (sería el comentario genérico para que actualizara pero con los null en campos nuevos ya no aplica)
     private static final List<Task> tasks = new ArrayList<>();
     static {
-        tasks.add(new Task(1, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta",
-                java.time.LocalDate.of(2024, 6, 30)));
-        tasks.add(new Task(2, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media",
-                java.time.LocalDate.of(2024, 7, 15)));
+        tasks.add(new Task(1L, "Tarea 1", "Descripción de la tarea 1", // esto no lo he sacado a constantes porque has dicho que no toquemos nada de aquí pero sí que me acuerdo eh?
+                TaskStatus.PENDING, TaskPriority.LOW,
+                java.time.LocalDate.of(2024, 6, 30), null, null));
+
+        tasks.add(new Task(2L, "Tarea 2", "Descripción de la tarea 2",
+                TaskStatus.IN_PROGRESS, TaskPriority.HIGH,
+                java.time.LocalDate.of(2024, 7, 15), null, null));
     }
 
     /**
@@ -58,12 +75,12 @@ public class TaskServiceImpl implements TaskService {
      * @return la tarea encontrada o null si no existe.
      */
     @Override
-    public Task findById(int id) {
+    public Task findById(Long id) {
         // Lógica para encontrar una tarea por su ID
         // Buscar la tarea en la lista de tareas por su ID y devolverla -> generado con
         // IA
         for (Task task : tasks) {
-            if (task.getId() == id) {
+            if (task.getId().equals(id)) {
                 return task; // Reemplazar con la implementación real
             }
         }
@@ -93,12 +110,12 @@ public class TaskServiceImpl implements TaskService {
      * @return la tarea actualizada o null si no existe.
      */
     @Override
-    public Task update(int id, Task task) {
+    public Task update(Long id, Task task) {
         // Lógica para actualizar una tarea existente
         // Buscar la tarea en la lista de tareas por su ID y actualizar sus campos con
         // los valores del objeto task -> generado con IA
         for (Task existingTask : tasks) {
-            if (existingTask.getId() == id) {
+            if (existingTask.getId().equals(id)) {
                 existingTask.setTitle(task.getTitle());
                 existingTask.setDescription(task.getDescription());
                 existingTask.setStatus(task.getStatus());
@@ -118,7 +135,7 @@ public class TaskServiceImpl implements TaskService {
      *                               indicado.
      */
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
         // Lógica para eliminar una tarea por su ID
         // Eliminar una tarea de la lista de tareas por su ID, comprobar antes si la
         // tarea existe y si no existe lanzar una excepción -> generado con IA
