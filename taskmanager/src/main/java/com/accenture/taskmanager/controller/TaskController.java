@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.accenture.taskmanager.Task;
+import com.accenture.taskmanager.model.Task;
 
 /**
  * Controlador REST encargado de gestionar las peticiones HTTP relacionadas
@@ -31,8 +31,8 @@ public class TaskController {
 
     // Añadir 2 tareas de ejemplo al ArrayList para poder probar los endpoints -> generado con IA
     static {
-        tasks.add(new Task(1, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta", java.time.LocalDate.of(2024, 6, 30)));
-        tasks.add(new Task(2, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media", java.time.LocalDate.of(2024, 7, 15)));
+        tasks.add(new Task(1L, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta", java.time.LocalDate.of(2024, 6, 30)));
+        tasks.add(new Task(2L, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media", java.time.LocalDate.of(2024, 7, 15)));
     }
 
     // El Rest Controller debe implementar el endpoint GET para obtener todas las
@@ -58,10 +58,10 @@ public class TaskController {
      *         si la tarea no existe
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable int id) {
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
         // Implementar la lógica para obtener una tarea por ID -> generado con IA
         for (Task task : tasks) {
-            if (task.getId() == id) {
+            if (task.getId().equals(id)) {
                 return ResponseEntity.ok(task);
             }
         }
@@ -93,10 +93,10 @@ public class TaskController {
      *         si la tarea no existe
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable int id, @RequestBody Task task) {
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
         // Implementar la lógica para actualizar una tarea por ID -> generado con IA
         for (Task existingTask : tasks) {
-            if (existingTask.getId() == id) {
+            if (existingTask.getId().equals(id)) {
                 existingTask.setTitle(task.getTitle());
                 existingTask.setDescription(task.getDescription());
                 existingTask.setStatus(task.getStatus());
@@ -118,11 +118,11 @@ public class TaskController {
      *         o código 404 si la tarea no existe
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable int id) {
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         // Implementar la lógica para eliminar una tarea por ID -> medio generado con IA
         // porque lo que me dió no valía porque era un 200
         for (int i = 0; i < tasks.size(); i++) {
-            if (tasks.get(i).getId() == id) {
+            if (tasks.get(i).getId().equals(id)) {
                 tasks.remove(i);
                 return ResponseEntity.noContent().build();
             }
