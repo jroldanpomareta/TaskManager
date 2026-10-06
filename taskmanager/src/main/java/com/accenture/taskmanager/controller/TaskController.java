@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.accenture.taskmanager.model.Task;
-import com.accenture.taskmanager.Task;
-import com.accenture.taskmanager.exceptions.TaskNotFoundException;
+import com.accenture.taskmanager.exceptions.TaskIsNotFoundException;
 import com.accenture.taskmanager.service.interfaces.TaskService;
 
 /**
@@ -23,9 +22,9 @@ import com.accenture.taskmanager.service.interfaces.TaskService;
  * @author Javier Roldán
  * @version 1.0
  */
-@RestController
-@RequestMapping("/api/v1/tasks")
-public class TaskController {
+  @RestController
+  @RequestMapping("/api/v1/tasks")
+  public class TaskController {
 
     // Crea una inyección de dependencias para el service, usa la interfaz
     // TaskService y la clase TaskServiceImpl, y utiliza el service para implementar
@@ -58,15 +57,15 @@ public class TaskController {
      *         o estado 404 NOT_FOUND si no existe.
      */
     @GetMapping("/{id}")
-@GetMapping("/{id}")
-public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-    Task task = taskService.findById(id);
-    if (task != null) {
-        return new ResponseEntity<>(task, HttpStatus.OK);
-    } else {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-}
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+         Task task = taskService.findById(id);
+            if (task != null) {
+                return new ResponseEntity<>(task, HttpStatus.OK);
+             } else {
+                       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                     }
+     }
         
 
     /**
@@ -89,16 +88,15 @@ public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
      * @return respuesta HTTP con la tarea actualizada y estado 200 OK,
      *         o estado 404 NOT_FOUND si no existe.
      */
-    @PutMapping("/{id}")
-@PutMapping("/{id}")
-public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
-    Task updatedTask = taskService.update(id, task);
-    if (updatedTask != null) {
-        return new ResponseEntity<>(updatedTask, HttpStatus.OK);
-    } else {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-}
+      @PutMapping("/{id}")
+      public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
+          Task updatedTask = taskService.update(id, task);
+             if (updatedTask != null) {
+                 return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+              } else {
+                       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                      }
+      }
 
     /**
      * Elimina una tarea mediante su identificador.
@@ -111,12 +109,11 @@ public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task 
      */
     // modifica el método deleteTask para que capture la excepción TaskNotFoundException y devuelva un estado 404 NOT_FOUND en lugar de IllegalArgumentException -> generado con IA
     @DeleteMapping("/{id}")
-@DeleteMapping("/{id}")
-public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-    try {
-        taskService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    } catch (TaskNotFoundException e) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-}
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        try {
+            taskService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } catch (TaskNotFoundException e) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+      }
