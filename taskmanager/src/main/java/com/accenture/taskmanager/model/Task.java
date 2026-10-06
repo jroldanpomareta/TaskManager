@@ -1,4 +1,4 @@
-package com.accenture.taskmanager;
+package com.accenture.taskmanager.model;
 
 // Crear el modelo Task con los atributos: id, title, description, status, priority, dueDate, incluir sus tipos de datos más adecuados, añadir constructor vacío y por parámetros, añadir getters y setters
 /**
@@ -8,7 +8,7 @@ package com.accenture.taskmanager;
  * @version 1.0
  */
 public class Task {
-    private int id;
+    private Long id;
     private String title;
     private String description;
     private String status;
@@ -31,7 +31,7 @@ public class Task {
      * @param priority    prioridad de la tarea
      * @param dueDate     fecha límite de la tarea
      */
-    public Task(int id, String title, String description, String status, String priority, java.time.LocalDate dueDate) {
+    public Task(Long id, String title, String description, String status, String priority, java.time.LocalDate dueDate) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -45,7 +45,7 @@ public class Task {
      *
      * @return identificador de la tarea
      */
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -54,7 +54,7 @@ public class Task {
      *
      * @param id nuevo identificador de la tarea
      */
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

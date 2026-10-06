@@ -324,7 +324,7 @@ Paso 3 - Implementación (autocompletado)<br>
 
 ```
 public class Task {
-    private int id;
+    private Long id;
     private String title;
     private String description;
     private String status;
@@ -336,7 +336,7 @@ public class Task {
     }
 
     // Constructor por parámetros
-    public Task(int id, String title, String description, String status, String priority, java.time.LocalDate dueDate) {
+    public Task(Long id, String title, String description, String status, String priority, java.time.LocalDate dueDate) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -346,11 +346,11 @@ public class Task {
     }
 
     // Getters y Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -401,8 +401,8 @@ Añadir tareas precargadas en la lista mediante autocompletado:
 // Añadir 2 tareas de ejemplo al ArrayList para poder probar los endpoints -> generado con IA
 
     static {
-        tasks.add(new Task(1, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta", java.time.LocalDate.of(2024, 6, 30)));
-        tasks.add(new Task(2, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media", java.time.LocalDate.of(2024, 7, 15)));
+        tasks.add(new Task(1L, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta", java.time.LocalDate.of(2024, 6, 30)));
+        tasks.add(new Task(2L, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media", java.time.LocalDate.of(2024, 7, 15)));
     }
 ```
 
@@ -428,14 +428,14 @@ Segundo comentario:
 // El Rest Controller debe implementar el endpoint Get para obtener una tarea por ID, utilizar ResponseEntity
 
 @GetMapping("/tasks/{id}") (esto es lo que devolvía originalmente el autocompletado, se cambia por ("/{id}"))
-    public ResponseEntity<Task> getTaskById(int id) {
+    public ResponseEntity<Task> getTaskById(Long id) {
         // Implementar la lógica para obtener una tarea por ID
         return ResponseEntity.ok().build();
     }
 ```
 
 Incidencia: Se quita ("/tasks") porque lo ha puesto mal la ruta porque se ha comido api/v1/ y es más fácil quitarlo que quitarlo del RequestMapping y luego incluir aquí el api/v1/, se añade ("/{id}") para que se combine.<br>
-Incidencia: Se pone también @PathVariable en int id porque no lo había puesto para decirle que lo coja de la url.<br>
+Incidencia: Se pone también @PathVariable en Long id porque no lo había puesto para decirle que lo coja de la url.<br>
 Incidencia: Al pinchar para poner la lógica y recorrer los tasks aparece sola con el autocompletado.<br>
 Incidencia: El autocompletado dejaba ResponseEntity.ok().build() si no encontraba la tarea, esto daría un 200. Se cambia por ResponseEntity.notFound().build() para que dé un 404 cuando la tarea no existe.
 
@@ -465,14 +465,14 @@ Cuarto comentario:
 // El Rest Controller debe implementar el endpoint PUT para actualizar una tarea por ID, utilizar ResponseEntity
 
 @PutMapping("/tasks/{id}") (esto es lo que devolvía originalmente el autocompletado, se cambia por ("/{id}"))
-    public ResponseEntity<Task> updateTask(int id, Task task) {
+    public ResponseEntity<Task> updateTask(Long id, Task task) {
         // Implementar la lógica para actualizar una tarea por ID
         return ResponseEntity.ok().build();
     }
 ```
 
 Incidencia: Se quita ("/tasks") porque lo ha puesto mal la ruta porque se ha comido api/v1/ y es más fácil quitarlo que quitarlo del RequestMapping y luego incluir aquí el api/v1/, se añade ("/{id}") para que se combine.<br>
-Incidencia: Se ponen también @PathVariable en int id y @RequestBody en Task task para decirle que lo coja del cuerpo de la petición, aquí al empezar a escribir sí que lo puso sólo el autocompletado.<br>
+Incidencia: Se ponen también @PathVariable en Long id y @RequestBody en Task task para decirle que lo coja del cuerpo de la petición, aquí al empezar a escribir sí que lo puso sólo el autocompletado.<br>
 Incidencia: Al pinchar para poner la lógica y recorrer los tasks aparece sola con el autocompletado.<br>
 Incidencia: El autocompletado dejaba ResponseEntity.ok().build() si no encuentra la tarea, lo que da un 200. Se cambia por ResponseEntity.notFound().build() para que de un 404 cuando la tarea que se quiera actualizar no existe.
 
@@ -483,7 +483,7 @@ Quinto comentario:
 // El Rest Controller debe implementar el endpoint DELETE para eliminar una tarea por ID, utilizar ResponseEntity
 
 @DeleteMapping("/tasks/{id}") (esto es lo que devolvía originalmente el autocompletado, se cambia por ("/{id}"))
-    public ResponseEntity<Void> deleteTask(int id) {
+    public ResponseEntity<Void> deleteTask(Long id) {
         // Implementar la lógica para eliminar una tarea por ID
         return ResponseEntity.ok().build();
     }
@@ -491,14 +491,14 @@ Quinto comentario:
 
 Incidencia: El autocompletado no añade automático el import de @DeteleMapping -> se corrige manual.<br>
 Incidencia: Se quita ("/tasks") porque lo ha puesto mal la ruta porque se ha comido api/v1/ y es más fácil quitarlo que quitarlo del RequestMapping y luego incluir aquí el api/v1/, se añade ("/{id}") para que se combine.<br>
-Incidencia: Se pone @PathVariable en int id para decirle que lo coja de la url.<br>
+Incidencia: Se pone @PathVariable en Long id para decirle que lo coja de la url.<br>
 Incidencia: Se añaden manualmente también las anotaciones de la clase:<br>
                 @RestController<br>
                 @RequestMapping ("/api/v1/tasks")<br>
 Incidencia: Al pinchar para poner la lógica el autocompletado da esto:
 ```
    for (Task task : tasks) {
-            if (task.getId() == id) {
+            if (task.getId().equals(id)) {
                 tasks.remove(task);
                 return ResponseEntity.ok().build();
             }
@@ -507,7 +507,7 @@ Incidencia: Al pinchar para poner la lógica el autocompletado da esto:
 pero no vale porque sería un 200 y tiene que ser 204 sin contenido, se pone así:
 ```
     for (int i = 0; i < tasks.size(); i++) {
-            if (tasks.get(i).getId() == id) {
+            if (tasks.get(i).getId().equals(id)) {
                 tasks.remove(i);
                 return ResponseEntity.noContent().build();
             }
@@ -572,7 +572,7 @@ Se utiliza para obtener la colección completa de tareas.<br>
 Añade /{id} a la ruta base:<br>
 <br>
 @GetMapping("/{id}")<br>
-public ResponseEntity<Task> getTaskById(@PathVariable int id) {<br>
+public ResponseEntity<Task> getTaskById(@PathVariable Long id) {<br>
     // ...<br>
 }<br>
 <br>
@@ -580,7 +580,7 @@ Responde a:<br>
 <br>
 GET /api/v1/tasks/5<br>
 <br>
-El valor 5 se recoge mediante @PathVariable int id y permite buscar una tarea concreta.<br>
+El valor 5 se recoge mediante @PathVariable Long id y permite buscar una tarea concreta.<br>
 <br>
 En resumen:<br>
 <br>
@@ -601,7 +601,7 @@ En este caso:
 
 ```
 @GetMapping("/{id}")
-public ResponseEntity<Task> getTaskById(@PathVariable int id) {
+public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
     // ...
 }
 ```
@@ -616,7 +616,7 @@ Si eliminas @PathVariable:
 
 ```
 @GetMapping("/{id}")
-public ResponseEntity<Task> getTaskById(int id) {
+public ResponseEntity<Task> getTaskById(Long id) {
     // ...
 }
 ```
@@ -625,7 +625,7 @@ Spring ya no sabrá que id debe obtenerse de la ruta. Normalmente intentará obt
 <br>
 También puede escribirse de forma explícita:<br>
 <br>
-public ResponseEntity<Task> getTaskById(@PathVariable("id") int id)<br>
+public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id)<br>
 <br>
 En resumen, @PathVariable es necesario para extraer el identificador incluido en la URI.
 
