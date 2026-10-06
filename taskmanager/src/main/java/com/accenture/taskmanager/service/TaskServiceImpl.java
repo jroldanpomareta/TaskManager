@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.accenture.taskmanager.Task;
 import com.accenture.taskmanager.exceptions.TaskNotFoundException;
+import com.accenture.taskmanager.model.Task;
 import com.accenture.taskmanager.service.interfaces.TaskService;
 
 /**
@@ -31,9 +31,9 @@ public class TaskServiceImpl implements TaskService {
     // endpoints -> generado con IA
     private static final List<Task> tasks = new ArrayList<>();
     static {
-        tasks.add(new Task(1, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta",
+        tasks.add(new Task(1L, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta",
                 java.time.LocalDate.of(2024, 6, 30)));
-        tasks.add(new Task(2, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media",
+        tasks.add(new Task(2L, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media",
                 java.time.LocalDate.of(2024, 7, 15)));
     }
 
@@ -58,12 +58,12 @@ public class TaskServiceImpl implements TaskService {
      * @return la tarea encontrada o null si no existe.
      */
     @Override
-    public Task findById(int id) {
+    public Task findById(Long id) {
         // Lógica para encontrar una tarea por su ID
         // Buscar la tarea en la lista de tareas por su ID y devolverla -> generado con
         // IA
         for (Task task : tasks) {
-            if (task.getId() == id) {
+            if (task.getId().equals(id)) {
                 return task; // Reemplazar con la implementación real
             }
         }
@@ -93,12 +93,12 @@ public class TaskServiceImpl implements TaskService {
      * @return la tarea actualizada o null si no existe.
      */
     @Override
-    public Task update(int id, Task task) {
+    public Task update(Long id, Task task) {
         // Lógica para actualizar una tarea existente
         // Buscar la tarea en la lista de tareas por su ID y actualizar sus campos con
         // los valores del objeto task -> generado con IA
         for (Task existingTask : tasks) {
-            if (existingTask.getId() == id) {
+            if (existingTask.getId().equals(id)) {
                 existingTask.setTitle(task.getTitle());
                 existingTask.setDescription(task.getDescription());
                 existingTask.setStatus(task.getStatus());
@@ -118,7 +118,7 @@ public class TaskServiceImpl implements TaskService {
      *                               indicado.
      */
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
         // Lógica para eliminar una tarea por su ID
         // Eliminar una tarea de la lista de tareas por su ID, comprobar antes si la
         // tarea existe y si no existe lanzar una excepción -> generado con IA

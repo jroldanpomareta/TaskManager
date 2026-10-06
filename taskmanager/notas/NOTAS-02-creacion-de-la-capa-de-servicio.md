@@ -177,10 +177,10 @@ Creación de TaskService.java:
 
 public interface TaskService {
     Iterable<Task> findAll();
-    Task findById(Long id); -> esto lo puso mal, se cambia por int id
+    Task findById(Long id); -> esto lo puso mal, se cambia por Long id
     Task create(Task task);
-    Task update(Long id, Task task); -> esto lo puso mal, se cambia por int id
-    void delete(Long id); -> esto lo puso mal, se cambia por int id
+    Task update(Long id, Task task); -> esto lo puso mal, se cambia por Long id
+    void delete(Long id); -> esto lo puso mal, se cambia por Long id
 }
 ```
 
@@ -208,7 +208,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task findById(int id) {
+    public Task findById(Long id) {
         // Lógica para encontrar una tarea por su ID
         return null; // Reemplazar con la implementación real
     }
@@ -220,13 +220,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task update(int id, Task task) {
+    public Task update(Long id, Task task) {
         // Lógica para actualizar una tarea existente
         return null; // Reemplazar con la implementación real
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
         // Lógica para eliminar una tarea por su ID
         // Reemplazar con la implementación real
     }
@@ -301,11 +301,11 @@ Método findById:
 
 ```
     @Override
-    public Task findById(int id) {
+    public Task findById(Long id) {
         // Lógica para encontrar una tarea por su ID
         // Buscar la tarea en la lista de tareas por su ID y devolverla -> generado con IA
         for (Task task : tasks) {
-            if (task.getId() == id) {
+            if (task.getId().equals(id)) {
                 return task; // Reemplazar con la implementación real
             }
         }
@@ -333,11 +333,11 @@ Método update:
 
 ```
     @Override
-    public Task update(int id, Task task) {
+    public Task update(Long id, Task task) {
         // Lógica para actualizar una tarea existente
         // Buscar la tarea en la lista de tareas por su ID y actualizar sus campos con los valores del objeto task -> generado con IA
         for (Task existingTask : tasks) {
-            if (existingTask.getId() == id) {
+            if (existingTask.getId().equals(id)) {
                 existingTask.setTitle(task.getTitle());
                 existingTask.setDescription(task.getDescription());
                 existingTask.setStatus(task.getStatus());
@@ -356,7 +356,7 @@ Método delete:
 
 ```
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
         // Lógica para eliminar una tarea por su ID
         // Eliminar una tarea de la lista de tareas por su ID, comprobar antes si la tarea existe y si no existe lanzar una excepción -> generado con IA
         Task taskToDelete = findById(id);
@@ -388,7 +388,7 @@ Se crean los métodos para traer la lógica desde el Service:
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable int id) {
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
         Task task = taskService.findById(id);
         if (task != null) {
             return new ResponseEntity<>(task, HttpStatus.OK);
@@ -404,7 +404,7 @@ Se crean los métodos para traer la lógica desde el Service:
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable int id, @RequestBody Task task) {
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
         Task updatedTask = taskService.update(id, task);
         if (updatedTask != null) {
             return new ResponseEntity<>(updatedTask, HttpStatus.OK);
@@ -414,7 +414,7 @@ Se crean los métodos para traer la lógica desde el Service:
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable int id) {
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         try {
             taskService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -496,7 +496,7 @@ Pregunta: (esto es anterior al cambio a excepción personalizada)<br>
 ¿Qué tipo de excepción se lanza cuando no se encuentra una tarea? ¿Dónde se captura esa excepción ahora mismo?<br>
 Respuesta:<br>
 <br>
-En TaskServiceImpl, el método delete(int id) lanza una excepción:<br>
+En TaskServiceImpl, el método delete(Long id) lanza una excepción:<br>
 <br>
 throw new IllegalArgumentException("La tarea con ID " + id + " no existe.");<br>
 <br>
@@ -514,7 +514,7 @@ Pregunta: (esto es posterior al cambio a excepción personalizada)<br>
 ¿Qué tipo de excepción se lanza cuando no se encuentra una tarea? ¿Dónde se captura esa excepción ahora mismo?<br>
 Respuesta:<br>
 <br>
-En TaskServiceImpl, el método delete(int id) lanza una excepción personalizada:<br>
+En TaskServiceImpl, el método delete(Long id) lanza una excepción personalizada:<br>
 <br>
 throw new TaskNotFoundException("La tarea con ID " + id + " no existe.");<br>
 <br>
@@ -650,7 +650,7 @@ Luego se añade otro comentario en TaskServiceImpl en el método delete para que
      *                               indicador
      */
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
         // Lógica para eliminar una tarea por su ID
         // Eliminar una tarea de la lista de tareas por su ID, comprobar antes si la
         // tarea existe y si no existe lanzar una excepción -> generado con IA
@@ -681,7 +681,7 @@ En este el javadoc me le dió automático el cambio el autocompletar.
      */
     // modifica el método deleteTask para que capture la excepción TaskNotFoundException y devuelva un estado 404 NOT_FOUND en lugar de IllegalArgumentException -> generado con IA
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable int id) {
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         try {
             taskService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
