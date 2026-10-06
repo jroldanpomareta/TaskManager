@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.accenture.taskmanager.enums.TaskPriority;
+import com.accenture.taskmanager.enums.TaskStatus;
 import com.accenture.taskmanager.exceptions.TaskNotFoundException;
 import com.accenture.taskmanager.model.Task;
 import com.accenture.taskmanager.service.interfaces.TaskService;
@@ -29,12 +31,29 @@ public class TaskServiceImpl implements TaskService {
     // datos y añade 2 tareas de ejemplo
     // al ArrayList usando el constructor de la clase Task para poder probar los
     // endpoints -> generado con IA
+    // Actualiza las tareas de ejemplo para adaptarlas al nuevo constructor de Task,
+    // Para los valores de status, consulta directamente el archivo
+    // src/main/java/com/accenture/taskmanager/enums/TaskStatus.java y utiliza
+    // exactamente
+    // los nombres de los enums declarados allí, sin traducirlos ni inventarlos.
+    // Para los valores de priority, consulta directamente el archivo
+    // src/main/java/com/accenture/taskmanager/enums/TaskPriority.java y utiliza
+    // exactamente
+    // los nombres de los enums declarados allí, sin traducirlos ni inventarlos.
+    // Añade también los valores correspondientes a createdAt y categoryId, no
+    // pongas PENDIENTE, ni ALTA, ni EN_PROGRESO ni MEDIA.
+    // —> generado con IA (sería el comentario genérico para que actualizara pero con los null en campos nuevos ya no aplica)
     private static final List<Task> tasks = new ArrayList<>();
+
     static {
-        tasks.add(new Task(1L, "Tarea 1", "Descripción de la tarea 1", "Pendiente", "Alta",
-                java.time.LocalDate.of(2024, 6, 30)));
-        tasks.add(new Task(2L, "Tarea 2", "Descripción de la tarea 2", "En progreso", "Media",
-                java.time.LocalDate.of(2024, 7, 15)));
+        tasks.add(new Task(1L, "Tarea 1", "Descripción de la tarea 1",
+                // esto no lo he sacado a constantes porque has dicho que no toquemos nada de aquí pero sí que me acuerdo eh?
+                TaskStatus.PENDING, TaskPriority.LOW,
+                java.time.LocalDate.of(2024, 6, 30), null, null));
+
+        tasks.add(new Task(2L, "Tarea 2", "Descripción de la tarea 2",
+                TaskStatus.IN_PROGRESS, TaskPriority.HIGH,
+                java.time.LocalDate.of(2024, 7, 15), null, null));
     }
 
     /**

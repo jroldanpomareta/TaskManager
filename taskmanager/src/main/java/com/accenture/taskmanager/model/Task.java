@@ -1,19 +1,44 @@
 package com.accenture.taskmanager.model;
 
-// Crear el modelo Task con los atributos: id, title, description, status, priority, dueDate, incluir sus tipos de datos más adecuados, añadir constructor vacío y por parámetros, añadir getters y setters
+import com.accenture.taskmanager.enums.TaskPriority;
+import com.accenture.taskmanager.enums.TaskStatus;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.EnumType;
+
+// Crear el modelo Task con los atributos: id, title, description, status, priority, dueDate, incluir sus tipos de datos más adecuados, añadir constructor vacío y por parámetros, añadir getters y setters -> generado por IA
+// Crear las anotaciones JPA necesarias en la clase Task para mapearla con la tabla task, incluyendo @Entity, @Table, @Id y @GeneratedValue, y añadir los imports necesarios, sin sustituir ningún código existente. -> generado por IA
+// Añade @Enumerated(EnumType.STRING) en la clase Task para que status y priority se guarden como texto en la base de datos -> generado por IA
 /**
  * Modelo que representa una tarea de la aplicación.
  *
  * @author Javier Roldán
  * @version 1.0
  */
+@Entity
+@Table(name = "task")
 public class Task {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
-    private String status;
-    private String priority;
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
+    @Enumerated(EnumType.STRING)
+    private TaskPriority priority;
+    @Column(name = "due_date")
     private java.time.LocalDate dueDate;
+    @Column(name = "created_at")
+    private java.time.LocalDateTime createdAt;
+    @Column(name = "category_id")
+    private Long categoryId;
 
     /**
      * Constructor vacío de la clase Task.
@@ -21,6 +46,7 @@ public class Task {
     public Task() {
     }
 
+    // Constructor para que los atributos status y priority sean del tipo TaskStatus y TaskPriority, respectivamente, y añade los imports necesarios, sin sustituir ningún código existente. -> generado por IA
     /**
      * Constructor de la clase Task con todos sus atributos.
      *
@@ -30,16 +56,22 @@ public class Task {
      * @param status      estado de la tarea
      * @param priority    prioridad de la tarea
      * @param dueDate     fecha límite de la tarea
+     * @param createdAt   fecha de creación de la tarea
+     * @param categoryId  identificador de la categoría a la que pertenece la tarea
      */
-    public Task(Long id, String title, String description, String status, String priority, java.time.LocalDate dueDate) {
+    public Task(Long id, String title, String description, TaskStatus status, TaskPriority priority,
+            java.time.LocalDate dueDate, java.time.LocalDateTime createdAt, Long categoryId) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
         this.priority = priority;
         this.dueDate = dueDate;
+        this.createdAt = createdAt;
+        this.categoryId = categoryId;
     }
 
+    // ajusta los getters y setters de los atributos status y priority para que devuelvan y acepten valores de tipo TaskStatus y TaskPriority, respectivamente, y añade los imports necesarios, sin sustituir ningún código existente. —> generado por IA
     /**
      * Obtiene el identificador de la tarea.
      *
@@ -99,7 +131,7 @@ public class Task {
      *
      * @return estado de la tarea
      */
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
@@ -108,7 +140,7 @@ public class Task {
      *
      * @param status nuevo estado de la tarea
      */
-    public void setStatus(String status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 
@@ -117,7 +149,7 @@ public class Task {
      *
      * @return prioridad de la tarea
      */
-    public String getPriority() {
+    public TaskPriority getPriority() {
         return priority;
     }
 
@@ -126,7 +158,7 @@ public class Task {
      *
      * @param priority nueva prioridad de la tarea
      */
-    public void setPriority(String priority) {
+    public void setPriority(TaskPriority priority) {
         this.priority = priority;
     }
 
@@ -146,5 +178,42 @@ public class Task {
      */
     public void setDueDate(java.time.LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    // pon los getters y setters de los atributos createdAt y categoryId, y añade los imports necesarios, sin sustituir ningún código existente. —> generado por IA
+    /**
+     * Obtiene la fecha de creación de la tarea.
+     *
+     * @return fecha de creación de la tarea
+     */
+    public java.time.LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * Modifica la fecha de creación de la tarea.
+     *
+     * @param createdAt nueva fecha de creación de la tarea
+     */
+    public void setCreatedAt(java.time.LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /**
+     * Obtiene la categoría de la tarea.
+     *
+     * @return categoría de la tarea
+     */
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    /**
+     * Modifica la categoría de la tarea.
+     *
+     * @param categoryId nueva categoría de la tarea
+     */
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 }
