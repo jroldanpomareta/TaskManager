@@ -2,15 +2,29 @@ package com.accenture.taskmanager.service;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import com.accenture.taskmanager.model.Tag;
+
+import com.accenture.taskmanager.model.Category;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.accenture.taskmanager.dto.PagedResponseDTO;
+import com.accenture.taskmanager.dto.TaskRequestDTO;
+import com.accenture.taskmanager.dto.TaskResponseDTO;
 import com.accenture.taskmanager.enums.TaskPriority;
 import com.accenture.taskmanager.enums.TaskStatus;
+import com.accenture.taskmanager.exceptions.CategoryNotFoundException;
 import com.accenture.taskmanager.exceptions.TaskNotFoundException;
+import com.accenture.taskmanager.mapper.TaskMapper;
 import com.accenture.taskmanager.model.Task;
 import com.accenture.taskmanager.repository.TaskRepository;
 import com.accenture.taskmanager.service.interfaces.TaskService;
+
+import com.accenture.taskmanager.repository.CategoryRepository;
+import com.accenture.taskmanager.repository.TagRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -55,19 +69,46 @@ public class TaskServiceImpl implements TaskService {
      */
     private final TaskRepository taskRepository;
     // private static final List<Task> tasks = new ArrayList<>();
+    /**
+     * Repositorio de categorías utilizado para acceder a los datos de categorías
+     * almacenados en la base de datos.
+     */ 
+    private final TagRepository tagRepository;
+
+    // Añadir TagRepository como dependencia mediante inyección por constructor,
+    // manteniendo TaskRepository y CategoryRepository. Actualizar el constructor
+    // para recibir e inicializar los tres repositorios. Añadir los imports
+    // necesarios y conservar el código existente. — generado por IA
+    /**
+     * Crea un nuevo servicio de tareas con los repositorios proporcionados.
+     * 
+     * @param taskRepository     repositorio de tareas a utilizar.
+     * @param categoryRepository repositorio de categorías a utilizar.
+     * @param tagRepository      repositorio de etiquetas a utilizar.
+     */
+    public TaskServiceImpl(TaskRepository taskRepository, CategoryRepository categoryRepository,
+            TagRepository tagRepository) {
+        this.taskRepository = taskRepository;
+        this.categoryRepository = categoryRepository;
+        this.tagRepository = tagRepository;
+    }
 
     // Crear el constructor que reciba TaskRepository y lo asigne al atributo
     // taskRepository. -> generado por IA
     /**
-     * Crea una nueva instancia de TaskServiceImpl con el repositorio de tareas
-     * proporcionado.
-     *
-     * @param taskRepository repositorio de tareas utilizado para acceder a los
-     *                       datos almacenados en la base de datos.
+     * Crea un nuevo servicio de tareas con el repositorio proporcionado.
+     * 
+     * @param taskRepository repositorio de tareas a utilizar.
      */
-    public TaskServiceImpl(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
-    }
+    // Actualizar el constructor para recibir TaskRepository y CategoryRepository e
+    // inicializar ambos atributos con this. Mantener la inyección por constructor y
+    // añadir el parámetro de cada repositorio. — generado por IA
+
+    // Añadir CategoryRepository como dependencia mediante inyección por
+    // constructor, manteniendo TaskRepository. Actualizar el constructor para
+    // recibir e inicializar ambos repositorios. Añadir los imports necesarios y
+    // conservar el estilo existente. — generado por IA
+    private final CategoryRepository categoryRepository;
 
     // static {
     // tasks.add(new Task(1L, "Tarea 1", "Descripción de la tarea 1",
@@ -81,36 +122,47 @@ public class TaskServiceImpl implements TaskService {
     // java.time.LocalDate.of(2024, 7, 15), null, null));
     // }
 
-    // actualiza el javadoc
     /**
-     * Devuelve una página de tareas.
+     * Obtiene todas las tareas con paginación.
      *
      * @param pageable información de paginación y ordenación.
-     * @return página de tareas con sus metadatos.
+     * @return página de tareas.
      */
+    // Adapta findAll para devolver PagedResponseDTO<TaskResponseDTO>, transformando
+    // manualmente cada Task de la página con TaskMapper.toResponseDTO y conservando
+    // los metadatos de paginación. — generado por IA
     @Override
-    public Page<Task> findAll(Pageable pageable) {
-        return taskRepository.findAll(pageable);
+    public PagedResponseDTO<TaskResponseDTO> findAll(Pageable pageable) {
+        Page<Task> tasks = taskRepository.findAll(pageable);
+        return new PagedResponseDTO<>(
+                tasks.getContent().stream()
+                        .map(TaskMapper::toResponseDTO)
+                        .toList(),
+                tasks.getNumber(),
+                tasks.getSize(),
+                tasks.getTotalElements(),
+                tasks.getTotalPages(),
+                tasks.isLast());
     }
 
     // actualiza el javadoc
     /**
      * Busca una tarea por su identificador.
-     *
+     * 
      * @param id identificador de la tarea que se desea buscar.
      * @return la tarea encontrada.
      * @throws TaskNotFoundException si no existe una tarea con el identificador
      *                               indicado.
      */
+    // Adapta findById para devolver TaskResponseDTO, buscando la tarea por id y
+    // transformándola con TaskMapper.toResponseDTO. Conserva TaskNotFoundException
+    // si no existe. — generado por IA
     @Override
-    public Task findById(Long id) {
-        // Lógica para encontrar una tarea por su ID
-        // Buscar la tarea en la lista de tareas por su ID y devolverla -> generado con
-        // IA
-        // Buscar la tarea por ID usando taskRepository y lanzar TaskNotFoundException
-        // si no existe. -> generado por IA
-        return taskRepository.findById(id)
-                .orElseThrow(() -> new TaskNotFoundException("La tarea con ID " + id + " no existe."));
+    public TaskResponseDTO findById(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException(
+                        "La tarea con ID " + id + " no existe."));
+        return TaskMapper.toResponseDTO(task);
     }
 
     // Añadir @Transactional a este método de escritura del Service para garantizar
@@ -118,20 +170,48 @@ public class TaskServiceImpl implements TaskService {
     // transacción. — generado por IA
     // actualiza el javadoc
     /**
-     * Crea una nueva tarea.
+     * Crea una nueva tarea con los datos proporcionados.
      *
-     * @param task objeto Task que se desea crear.
+     * @param dto objeto TaskRequestDTO con los datos de la tarea que se desea
+     *            crear.
      * @return la tarea creada.
      */
+    // Adapta create para recibir TaskRequestDTO, convertirlo a Task con
+    // TaskMapper.toEntity, guardarlo con taskRepository y devolver el resultado
+    // como TaskResponseDTO. — generado por IA
+    // Modificar create para resolver dto.getCategoryId() mediante
+    // CategoryRepository. Si categoryId es null, crear la tarea sin categoría. Si
+    // contiene un ID, buscar la categoría y asignarla a la tarea. Si no existe,
+    // lanzar CategoryNotFoundException indicando el ID. Mantener el guardado y la
+    // respuesta mediante TaskMapper. — generado por IA
+    // Resolver dto.getTagIds() mediante TagRepository y asignar las etiquetas
+    // encontradas a task. Si tagIds es null o está vacío, la tarea no tendrá
+    // etiquetas. Si algún ID no existe, lanzar una excepción que indique el ID
+    // ausente. Mantener intactos el tratamiento de la categoría, el guardado y la
+    // respuesta mediante TaskMapper. Añadir los imports necesarios. — generado por
+    // IA
     @Transactional
     @Override
-    public Task create(Task task) {
-        // Lógica para crear una nueva tarea
-        // Añadir la tarea nueva a la lista de tareas y devolverla en el return ->
-        // generado con IA
-        // Guardar la tarea utilizando taskRepository y devolver la tarea guardada. ->
-        // generado por IA
-        return taskRepository.save(task);
+    public TaskResponseDTO create(TaskRequestDTO dto) {
+        Task task = TaskMapper.toEntity(dto);
+        if (dto.getCategoryId() != null) {
+            Category category = categoryRepository.findById(dto.getCategoryId())
+                    .orElseThrow(() -> new CategoryNotFoundException(
+                            "La categoría con ID " + dto.getCategoryId() + " no existe."));
+            task.setCategory(category);
+        }
+        if (dto.getTagIds() != null && !dto.getTagIds().isEmpty()) {
+            List<Tag> tags = tagRepository.findAllById(dto.getTagIds());
+            for (Long tagId : dto.getTagIds()) {
+                if (tags.stream().noneMatch(tag -> tag.getId().equals(tagId))) {
+                    throw new IllegalArgumentException(
+                            "La etiqueta con ID " + tagId + " no existe.");
+                }
+            }
+            task.setTags(tags);
+        }
+        Task savedTask = taskRepository.save(task);
+        return TaskMapper.toResponseDTO(savedTask);
     }
 
     // Añadir @Transactional a este método de escritura del Service para garantizar
@@ -141,41 +221,98 @@ public class TaskServiceImpl implements TaskService {
     /**
      * Actualiza una tarea existente con los datos proporcionados.
      *
-     * @param id   identificador de la tarea que se desea actualizar.
-     * @param task objeto Task con los nuevos datos para actualizar la tarea.
+     * @param id  identificador de la tarea que se desea actualizar.
+     * @param dto objeto TaskRequestDTO con los datos de la tarea que se desea
+     *            actualizar.
      * @return la tarea actualizada.
      * @throws TaskNotFoundException si no existe una tarea con el identificador
      *                               indicado.
      */
+    // Lógica para actualizar una tarea existente
+    // Buscar la tarea en la lista de tareas por su ID y actualizar sus campos con
+    // los valores del objeto task -> generado con IA
+    // Actualizar una tarea existente utilizando taskRepository: buscarla por ID y,
+    // si existe, actualizar title, description, status, priority, dueDate y
+    // categoryId con los valores recibidos en task, conservando createdAt. Guardar
+    // y devolver la tarea actualizada. Si no existe, lanzar TaskNotFoundException.
+    // -> generado por IA
+    // Adapta update para recibir el id y TaskRequestDTO, buscar la tarea existente,
+    // actualizar title, description, status, priority y dueDate, conservar
+    // createdAt, guardar y devolver TaskResponseDTO mediante TaskMapper. — generado
+    // por IA
+    // Actualizar la categoría de la tarea usando dto.getCategoryId() y
+    // CategoryRepository. Si categoryId es null, dejar la tarea sin categoría. Si
+    // contiene un ID, buscar la categoría y asignarla a existingTask. Si no existe,
+    // lanzar CategoryNotFoundException indicando el ID. Mantener el resto de campos
+    // y el guardado existentes. — generado por IA
+    // Resolver dto.getTagIds() mediante TagRepository y reemplazar la lista de
+    // etiquetas de existingTask. Si tagIds es null o está vacío, dejar la tarea sin
+    // etiquetas. Si algún ID no existe, lanzar una excepción indicando el ID
+    // ausente. Mantener el resto de la lógica de actualización, el guardado y la
+    // respuesta mediante TaskMapper. Añadir los imports necesarios y conservar el
+    // código existente. — generado por IA
     @Transactional
     @Override
-    public Task update(Long id, Task task) {
-        // Lógica para actualizar una tarea existente
-        // Buscar la tarea en la lista de tareas por su ID y actualizar sus campos con
-        // los valores del objeto task -> generado con IA
-        // Actualizar una tarea existente utilizando taskRepository: buscarla por ID y,
-        // si existe, actualizar title, description, status, priority, dueDate y
-        // categoryId con los valores recibidos en task, conservando createdAt. Guardar
-        // y devolver la tarea actualizada. Si no existe, lanzar TaskNotFoundException.
-        // -> generado por IA
-        Task existingTask = findById(id);
-        existingTask.setTitle(task.getTitle());
-        existingTask.setDescription(task.getDescription());
-        existingTask.setStatus(task.getStatus());
-        existingTask.setPriority(task.getPriority());
-        existingTask.setDueDate(task.getDueDate());
-        existingTask.setCategory(task.getCategory());
-        existingTask.setTags(task.getTags());
-        return taskRepository.save(existingTask);
+    public TaskResponseDTO update(Long id, TaskRequestDTO dto) {
+        Task existingTask = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException(
+                        "La tarea con ID " + id + " no existe."));
+
+        existingTask.setTitle(dto.getTitle());
+        existingTask.setDescription(dto.getDescription());
+        existingTask.setStatus(dto.getStatus());
+        existingTask.setPriority(dto.getPriority());
+        existingTask.setDueDate(dto.getDueDate());
+
+        if (dto.getCategoryId() != null) {
+            Category category = categoryRepository.findById(dto.getCategoryId())
+                    .orElseThrow(() -> new CategoryNotFoundException(
+                            "La categoría con ID " + dto.getCategoryId() + " no existe."));
+            existingTask.setCategory(category);
+        } else {
+            existingTask.setCategory(null);
+        }
+
+        if (dto.getTagIds() != null && !dto.getTagIds().isEmpty()) {
+            List<Tag> tags = tagRepository.findAllById(dto.getTagIds());
+
+            for (Long tagId : dto.getTagIds()) {
+                if (tags.stream().noneMatch(tag -> tag.getId().equals(tagId))) {
+                    throw new IllegalArgumentException(
+                            "La etiqueta con ID " + tagId + " no existe.");
+                }
+            }
+
+            existingTask.setTags(tags);
+        } else {
+            existingTask.setTags(List.of());
+        }
+
+        Task updatedTask = taskRepository.save(existingTask);
+        return TaskMapper.toResponseDTO(updatedTask);
     }
 
     // Añadir @Transactional a este método de escritura del Service para garantizar
     // que sus operaciones sobre la base de datos se ejecuten dentro de una
     // transacción. — generado por IA
+    // Lógica para eliminar una tarea por su ID
+    // Eliminar una tarea de la lista de tareas por su ID, comprobar antes si la
+    // tarea existe y si no existe lanzar una excepción -> generado con IA
+    // Cambia la excepción lanzada a TaskNotFoundException para indicar que la tarea
+    // no existe
+    // Eliminar la tarea utilizando taskRepository: buscarla por ID y comprobar que
+    // existe mediante findById. Si no existe, lanzar TaskNotFoundException. Si
+    // existe, eliminarla utilizando taskRepository.delete(taskToDelete). ->
+    // generado por IA
     // actualiza el javadoc
+    // Adapta delete para que busque la entidad Task directamente en taskRepository
+    // mediante su id, lance TaskNotFoundException si no existe y elimine la entidad
+    // encontrada. No utilices findById del servicio porque ahora devuelve
+    // TaskResponseDTO. Mantén @Transactional y la firma void delete(Long id). —
+    // generado por IA
     /**
      * Elimina una tarea por su identificador.
-     *
+     * 
      * @param id identificador de la tarea que se desea eliminar.
      * @throws TaskNotFoundException si no existe una tarea con el identificador
      *                               indicado.
@@ -183,18 +320,10 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     @Override
     public void delete(Long id) {
-        // Lógica para eliminar una tarea por su ID
-        // Eliminar una tarea de la lista de tareas por su ID, comprobar antes si la
-        // tarea existe y si no existe lanzar una excepción -> generado con IA
-        // Cambia la excepción lanzada a TaskNotFoundException para indicar que la tarea
-        // no existe
-        // Eliminar la tarea utilizando taskRepository: buscarla por ID y comprobar que
-        // existe mediante findById. Si no existe, lanzar TaskNotFoundException. Si
-        // existe, eliminarla utilizando taskRepository.delete(taskToDelete). ->
-        // generado por IA
-        Task taskToDelete = findById(id);
+        Task taskToDelete = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException(
+                        "La tarea con ID " + id + " no existe."));
         taskRepository.delete(taskToDelete);
-
     }
 
     // pon los métodos que faltan de la interfaz TaskService, que son findByStatus y
@@ -243,11 +372,27 @@ public class TaskServiceImpl implements TaskService {
      *
      * @param categoryId identificador de la categoría.
      * @param pageable   información de paginación y ordenación.
-     * @return página de tareas pertenecientes a la categoría indicada.
+     * @return respuesta paginada con los DTO de las tareas de la categoría.
      */
+    // Adapta findByCategoryId para devolver PagedResponseDTO<TaskResponseDTO>,
+    // usando TaskMapper para convertir las tareas y conservando los metadatos
+    // de paginación. — generado por IA
     @Override
-    public Page<Task> findByCategoryId(Long categoryId, Pageable pageable) {
-        return taskRepository.findByCategoryId(categoryId, pageable);
+    public PagedResponseDTO<TaskResponseDTO> findByCategoryId(Long categoryId, Pageable pageable) {
+        Page<Task> tasks = taskRepository.findByCategoryId(categoryId, pageable);
+
+        List<TaskResponseDTO> content = tasks.getContent()
+                .stream()
+                .map(TaskMapper::toResponseDTO)
+                .toList();
+
+        return new PagedResponseDTO<>(
+                content,
+                tasks.getNumber(),
+                tasks.getSize(),
+                tasks.getTotalElements(),
+                tasks.getTotalPages(),
+                tasks.isLast());
     }
 
     /**

@@ -3,6 +3,9 @@ package com.accenture.taskmanager.service.interfaces;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.accenture.taskmanager.dto.PagedResponseDTO;
+import com.accenture.taskmanager.dto.TaskRequestDTO;
+import com.accenture.taskmanager.dto.TaskResponseDTO;
 import com.accenture.taskmanager.enums.TaskPriority;
 
 import com.accenture.taskmanager.enums.TaskStatus;
@@ -26,36 +29,45 @@ import com.accenture.taskmanager.model.Task;
 public interface TaskService {
 
     /**
-     * Obtiene todas las tareas.
+     * Obtiene todas las tareas con paginación.
      *
-     * @return iterable con todas las tareas.
+     * @param pageable información de paginación y ordenación.
+     * @return página de tareas.
      */
-    Page<Task> findAll(Pageable pageable);
+    // Adapta findAll para devolver PagedResponseDTO<TaskResponseDTO> en lugar de
+    // Page<Task>, manteniendo el parámetro Pageable. — generado por IA
+    PagedResponseDTO<TaskResponseDTO> findAll(Pageable pageable);
 
     /**
-     * Busca una tarea por su identificador.
-     *
-     * @param id identificador de la tarea que se desea buscar.
-     * @return la tarea encontrada o null si no existe.
+     * Obtiene una tarea por su identificador.
+     * 
+     * @param id identificador de la tarea que se desea obtener.
+     * @return la tarea encontrada.
      */
-    Task findById(Long id);
+    // Adapta findById para devolver TaskResponseDTO en lugar de Task, manteniendo
+    // la búsqueda por id. — generado por IA
+    TaskResponseDTO findById(Long id);
 
     /**
      * Crea una nueva tarea.
-     *
-     * @param task tarea que se desea crear.
+     * 
+     * @param taskRequestDTO datos de la tarea que se desea crear.
      * @return la tarea creada.
      */
-    Task create(Task task);
+    // Adapta create para recibir TaskRequestDTO y devolver TaskResponseDTO. —
+    // generado por IA
+    TaskResponseDTO create(TaskRequestDTO task);
 
     /**
      * Actualiza una tarea existente.
-     *
-     * @param id   identificador de la tarea que se desea actualizar.
-     * @param task datos actualizados de la tarea.
-     * @return la tarea actualizada o null si no existe.
+     * 
+     * @param id             identificador de la tarea que se desea actualizar.
+     * @param taskRequestDTO datos de la tarea que se desea actualizar.
+     * @return la tarea actualizada.
      */
-    Task update(Long id, Task task);
+    // Adapta update para recibir el id y TaskRequestDTO y devolver TaskResponseDTO.
+    // — generado por IA
+    TaskResponseDTO update(Long id, TaskRequestDTO task);
 
     /**
      * Elimina una tarea por su identificador.
@@ -88,7 +100,7 @@ public interface TaskService {
      * @param status   estado de las tareas que se desean buscar.
      * @param priority prioridad de las tareas que se desean buscar.
      * @param pageable información de paginación.
-     * @return iterable con las tareas encontradas.
+     * @return página con las tareas encontradas.
      */
     Page<Task> findByStatusAndPriority(String status, String priority, Pageable pageable);
 
@@ -96,15 +108,13 @@ public interface TaskService {
     // TaskRepository y devolviendo los resultados correspondientes, sin añadir
     // lógica de negocio innecesaria. — generado por IA
     /**
-     * Busca tareas por su estado y prioridad, con paginación.
+     * Busca tareas por su categoría.
      *
-     * @param status   estado de las tareas que se desean buscar.
-     * @param priority prioridad de las tareas que se desean buscar.
-     * @param pageable información de paginación y ordenación.
-     * @return página de tareas que coinciden con el estado y la prioridad
-     *         indicados.
+     * @param categoryId identificador de la categoría que se desea buscar.
+     * @param pageable   información de paginación.
+     * @return página con las tareas encontradas.
      */
-    Page<Task> findByCategoryId(Long categoryId, Pageable pageable);
+    PagedResponseDTO<TaskResponseDTO> findByCategoryId(Long categoryId, Pageable pageable);
 
     /**
      * Busca tareas por su etiqueta.

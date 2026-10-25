@@ -20,6 +20,9 @@ import com.accenture.taskmanager.model.Task;
 /**
  * Repository interface for managing Task entities.
  * Provides methods for querying tasks based on status, priority, category, and tags.
+ * 
+ * @author Javier Roldán
+ * @version 1.0
  */
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {

@@ -2,8 +2,6 @@ package com.accenture.taskmanager.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,7 +31,6 @@ public class Tag {
     @Column(name = "name")
     private String name;
 
-    @JsonIgnore
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     private List<Task> tasks;
 

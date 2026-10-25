@@ -17,6 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import com.accenture.taskmanager.dto.PagedResponseDTO;
+import com.accenture.taskmanager.dto.TaskRequestDTO;
+import com.accenture.taskmanager.dto.TaskResponseDTO;
 import com.accenture.taskmanager.enums.TaskPriority;
 import com.accenture.taskmanager.enums.TaskStatus;
 import com.accenture.taskmanager.exceptions.TaskNotFoundException;
@@ -34,6 +37,9 @@ import com.accenture.taskmanager.service.interfaces.TaskService;
 @RequestMapping("/api/v1/tasks")
 public class TaskController {
 
+    /**
+     * Servicio de gestión de tareas.
+     */
     // Crea una inyección de dependencias para el service, usa la interfaz
     // TaskService y la clase TaskServiceImpl, y utiliza el service para implementar
     // los endpoints del controlador
@@ -56,69 +62,75 @@ public class TaskController {
      * @param sort criterio de ordenación (opcional, valor por defecto: "createdAt,desc").
      * @return respuesta HTTP con la página de tareas y estado 200 OK.
      */
+    // Adapta getAllTasks para devolver
+    // ResponseEntity<PagedResponseDTO<TaskResponseDTO>> usando
+    // taskService.findAll(pageable), conservando los parámetros de paginación,
+    // ordenación y el estado HTTP 200 OK. — generado por IA
     @GetMapping
-    public ResponseEntity<Page<Task>> getAllTasks(
+    public ResponseEntity<PagedResponseDTO<TaskResponseDTO>> getAllTasks(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt,desc") String sort) {
 
         size = Math.min(size, 100);
-
         String[] sortParams = sort.split(",");
         Pageable pageable = PageRequest.of(
                 page,
                 size,
                 Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0]));
 
-        Page<Task> tasks = taskService.findAll(pageable);
+        PagedResponseDTO<TaskResponseDTO> tasks = taskService.findAll(pageable);
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
     /**
      * Obtiene una tarea mediante su identificador.
-     *
-     * @param id identificador de la tarea.
-     * @return respuesta HTTP con la tarea encontrada y estado 200 OK,
-     *         o estado 404 NOT_FOUND si no existe.
+     * 
+     * @param id identificador de la tarea que se desea obtener
+     * @return respuesta HTTP con la tarea encontrada y estado 200 OK, o estado 404
+     *         NOT_FOUND si no existe
      */
+    // Adapta getTaskById para devolver ResponseEntity<TaskResponseDTO> usando
+    // taskService.findById(id). Conserva la ruta y el estado HTTP 200 OK cuando se
+    // encuentra la tarea. — generado por IA
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-        Task task = taskService.findById(id);
-        if (task != null) {
-            return new ResponseEntity<>(task, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<TaskResponseDTO> getTaskById(@PathVariable Long id) {
+        TaskResponseDTO task = taskService.findById(id);
+        return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
     /**
      * Crea una nueva tarea.
-     *
-     * @param task objeto que contiene los datos de la nueva tarea.
-     * @return respuesta HTTP con la tarea creada y estado 201 CREATED.
+     * 
+     * @param task objeto que contiene los datos de la tarea a crear
+     * @return respuesta HTTP con la tarea creada y estado 201 CREATED
      */
+    // Adapta createTask para recibir TaskRequestDTO, llamar a taskService.create y
+    // devolver ResponseEntity<TaskResponseDTO> con estado HTTP 201 CREATED. —
+    // generado por IA
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        Task createdTask = taskService.create(task);
+    public ResponseEntity<TaskResponseDTO> createTask(@RequestBody TaskRequestDTO task) {
+        TaskResponseDTO createdTask = taskService.create(task);
         return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     }
 
     /**
      * Actualiza una tarea existente.
      *
-     * @param id   identificador de la tarea que se desea actualizar.
-     * @param task objeto que contiene los datos actualizados de la tarea.
-     * @return respuesta HTTP con la tarea actualizada y estado 200 OK,
-     *         o estado 404 NOT_FOUND si no existe.
+     * @param id   identificador de la tarea que se desea actualizar
+     * @param task objeto que contiene los datos actualizados de la tarea
+     * @return respuesta HTTP con la tarea actualizada y estado 200 OK
      */
+    // Adapta updateTask para recibir TaskRequestDTO, llamar a taskService.update y
+    // devolver ResponseEntity<TaskResponseDTO> con estado HTTP 200 OK. — generado
+    // por IA
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
-        Task updatedTask = taskService.update(id, task);
-        if (updatedTask != null) {
-            return new ResponseEntity<>(updatedTask, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<TaskResponseDTO> updateTask(
+            @PathVariable Long id,
+            @RequestBody TaskRequestDTO task) {
+
+        TaskResponseDTO updatedTask = taskService.update(id, task);
+        return new ResponseEntity<>(updatedTask, HttpStatus.OK);
     }
 
     /**
@@ -156,11 +168,12 @@ public class TaskController {
      * @param categoryId identificador de la categoría.
      * @param page       número de página (opcional, valor por defecto: 0).
      * @param size       tamaño de página (opcional, valor por defecto: 10, máximo: 100).
-     * @param sort       criterio de ordenación (opcional, valor por defecto: "createdAt,desc").
+     * @param sort       criterio de ordenación (opcional, valor por defecto:
+     *                   "createdAt,desc").
      * @return respuesta HTTP con la página de tareas filtradas y estado 200 OK.
-     */ 
+     */
     @GetMapping("/by-category/{categoryId}")
-    public ResponseEntity<Page<Task>> getTasksByCategoryId(
+    public ResponseEntity<PagedResponseDTO<TaskResponseDTO>> getTasksByCategoryId(
             @PathVariable Long categoryId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -173,8 +186,9 @@ public class TaskController {
                 size,
                 Sort.by(Sort.Direction.fromString(sortParams[1]), sortParams[0]));
 
-        Page<Task> tasks = taskService.findByCategoryId(categoryId, pageable);
-        return new ResponseEntity<>(tasks, HttpStatus.OK);
+        PagedResponseDTO<TaskResponseDTO> tasks =
+        taskService.findByCategoryId(categoryId, pageable);
+        return ResponseEntity.ok(tasks);
     }
 
     // Traer los métodos findAll, findById, create, update y delete, del service
@@ -190,9 +204,10 @@ public class TaskController {
      * @param tagId identificador de la etiqueta.
      * @param page  número de página (opcional, valor por defecto: 0).
      * @param size  tamaño de página (opcional, valor por defecto: 10, máximo: 100).
-     * @param sort  criterio de ordenación (opcional, valor por defecto: "createdAt,desc").
+     * @param sort  criterio de ordenación (opcional, valor por defecto:
+     *              "createdAt,desc").
      * @return respuesta HTTP con la página de tareas filtradas y estado 200 OK.
-     */ 
+     */
     @GetMapping("/by-tag/{tagId}")
     public ResponseEntity<Page<Task>> getTasksByTagId(
             @PathVariable Long tagId,
@@ -223,8 +238,10 @@ public class TaskController {
      * @param status   estado de la tarea (TaskStatus).
      * @param priority prioridad de la tarea (TaskPriority).
      * @param page     número de página (opcional, valor por defecto: 0).
-     * @param size     tamaño de página (opcional, valor por defecto: 10, máximo: 100).
-     * @param sort     criterio de ordenación (opcional, valor por defecto: "createdAt,desc").
+     * @param size     tamaño de página (opcional, valor por defecto: 10, máximo:
+     *                 100).
+     * @param sort     criterio de ordenación (opcional, valor por defecto:
+     *                 "createdAt,desc").
      * @return respuesta HTTP con la página de tareas filtradas y estado 200 OK.
      */
     @GetMapping("/by-status-priority")
@@ -248,11 +265,12 @@ public class TaskController {
     }
 
     /**
-     * Obtiene las tareas cuya fecha de vencimiento es anterior a la fecha especificada.
+     * Obtiene las tareas cuya fecha de vencimiento es anterior a la fecha
+     * especificada.
      *
      * @param date fecha límite para filtrar las tareas.
      * @return respuesta HTTP con la lista de tareas filtradas y estado 200 OK.
-     */ 
+     */
     @GetMapping("/before-date")
     public ResponseEntity<Iterable<Task>> getTasksByDueDateBefore(@RequestParam java.time.LocalDate date) {
         Iterable<Task> tasks = taskService.findByDueDateBefore(date);
