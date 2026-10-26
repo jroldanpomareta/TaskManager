@@ -157,11 +157,12 @@ public class TaskServiceImpl implements TaskService {
     // Adapta findById para devolver TaskResponseDTO, buscando la tarea por id y
     // transformándola con TaskMapper.toResponseDTO. Conserva TaskNotFoundException
     // si no existe. — generado por IA
+    // Actualizar el mensaje de TaskNotFoundException para que siga exactamente el formato "Tarea con id X no encontrada", manteniendo la lógica existente. — generado por IA
     @Override
     public TaskResponseDTO findById(Long id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(
-                        "La tarea con ID " + id + " no existe."));
+                        "Tarea con id " + id + " no encontrada."));
         return TaskMapper.toResponseDTO(task);
     }
 
@@ -194,18 +195,20 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponseDTO create(TaskRequestDTO dto) {
         Task task = TaskMapper.toEntity(dto);
+        // Si el categoryId recibido en el DTO no existe, lanzar IllegalArgumentException con el mensaje "Categoría con id X no encontrada". Mantener el resto de la lógica existente. — generado por IA
         if (dto.getCategoryId() != null) {
             Category category = categoryRepository.findById(dto.getCategoryId())
-                    .orElseThrow(() -> new CategoryNotFoundException(
-                            "La categoría con ID " + dto.getCategoryId() + " no existe."));
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Categoría con id " + dto.getCategoryId() + " no encontrada."));
             task.setCategory(category);
         }
+        // Cambiar el mensaje de IllegalArgumentException para etiquetas inexistentes al formato "Etiqueta con id X no encontrada", conservando la comprobación existente. — generado por IA
         if (dto.getTagIds() != null && !dto.getTagIds().isEmpty()) {
             List<Tag> tags = tagRepository.findAllById(dto.getTagIds());
             for (Long tagId : dto.getTagIds()) {
                 if (tags.stream().noneMatch(tag -> tag.getId().equals(tagId))) {
                     throw new IllegalArgumentException(
-                            "La etiqueta con ID " + tagId + " no existe.");
+                            "Etiqueta con id " + tagId + " no encontrada.");
                 }
             }
             task.setTags(tags);
@@ -251,12 +254,13 @@ public class TaskServiceImpl implements TaskService {
     // ausente. Mantener el resto de la lógica de actualización, el guardado y la
     // respuesta mediante TaskMapper. Añadir los imports necesarios y conservar el
     // código existente. — generado por IA
+    // Actualizar el mensaje de TaskNotFoundException para que siga exactamente el formato "Tarea con id X no encontrada", manteniendo la lógica existente. — generado por IA
     @Transactional
     @Override
     public TaskResponseDTO update(Long id, TaskRequestDTO dto) {
         Task existingTask = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(
-                        "La tarea con ID " + id + " no existe."));
+                        "Tarea con id " + id + " no encontrada."));
 
         existingTask.setTitle(dto.getTitle());
         existingTask.setDescription(dto.getDescription());
@@ -264,10 +268,11 @@ public class TaskServiceImpl implements TaskService {
         existingTask.setPriority(dto.getPriority());
         existingTask.setDueDate(dto.getDueDate());
 
+        // Si el categoryId recibido en el DTO no existe, lanzar IllegalArgumentException con el mensaje "Categoría con id X no encontrada". Mantener el resto de la lógica existente. — generado por IA
         if (dto.getCategoryId() != null) {
             Category category = categoryRepository.findById(dto.getCategoryId())
-                    .orElseThrow(() -> new CategoryNotFoundException(
-                            "La categoría con ID " + dto.getCategoryId() + " no existe."));
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Categoría con id " + dto.getCategoryId() + " no encontrada."));
             existingTask.setCategory(category);
         } else {
             existingTask.setCategory(null);
@@ -275,11 +280,11 @@ public class TaskServiceImpl implements TaskService {
 
         if (dto.getTagIds() != null && !dto.getTagIds().isEmpty()) {
             List<Tag> tags = tagRepository.findAllById(dto.getTagIds());
-
+            // Cambiar el mensaje de IllegalArgumentException para etiquetas inexistentes al formato "Etiqueta con id X no encontrada", conservando la comprobación existente. — generado por IA
             for (Long tagId : dto.getTagIds()) {
                 if (tags.stream().noneMatch(tag -> tag.getId().equals(tagId))) {
                     throw new IllegalArgumentException(
-                            "La etiqueta con ID " + tagId + " no existe.");
+                            "Etiqueta con id " + tagId + " no encontrada.");
                 }
             }
 
@@ -310,6 +315,7 @@ public class TaskServiceImpl implements TaskService {
     // encontrada. No utilices findById del servicio porque ahora devuelve
     // TaskResponseDTO. Mantén @Transactional y la firma void delete(Long id). —
     // generado por IA
+    // Actualizar el mensaje de TaskNotFoundException para que siga exactamente el formato "Tarea con id X no encontrada", manteniendo la lógica existente. — generado por IA
     /**
      * Elimina una tarea por su identificador.
      * 
@@ -322,7 +328,7 @@ public class TaskServiceImpl implements TaskService {
     public void delete(Long id) {
         Task taskToDelete = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(
-                        "La tarea con ID " + id + " no existe."));
+                        "Tarea con id " + id + " no encontrada."));
         taskRepository.delete(taskToDelete);
     }
 

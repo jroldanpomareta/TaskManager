@@ -1,7 +1,7 @@
 package com.accenture.taskmanager.service;
 
 import java.util.List;
-
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -54,12 +54,13 @@ public class CategoryServiceImpl implements CategoryService {
      *
      * @param id the ID of the category to find
      * @return a CategoryResponseDTO representing the found category
-     * @throws CategoryNotFoundException if the category is not found
+     * @throws NoSuchElementException if the category is not found
      */
+    // Sustituir CategoryNotFoundException por java.util.NoSuchElementException en el orElseThrow. El mensaje debe ser "Categoría con id " + id + " no encontrada". Actualizar el Javadoc para documentar NoSuchElementException. — generado por IA
     @Override
     public CategoryResponseDTO findCategoryById(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
+                .orElseThrow(() -> new NoSuchElementException("Categoría con id " + id + " no encontrada"));
         return CategoryMapper.toResponseDTO(category);
     }
 
