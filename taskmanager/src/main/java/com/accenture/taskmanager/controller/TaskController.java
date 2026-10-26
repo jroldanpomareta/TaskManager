@@ -22,7 +22,7 @@ import com.accenture.taskmanager.dto.TaskRequestDTO;
 import com.accenture.taskmanager.dto.TaskResponseDTO;
 import com.accenture.taskmanager.enums.TaskPriority;
 import com.accenture.taskmanager.enums.TaskStatus;
-import com.accenture.taskmanager.exceptions.TaskNotFoundException;
+
 import com.accenture.taskmanager.model.Task;
 import com.accenture.taskmanager.service.interfaces.TaskService;
 
@@ -147,14 +147,11 @@ public class TaskController {
     // modifica el método deleteTask para que capture la excepción
     // TaskNotFoundException y devuelva un estado 404 NOT_FOUND en lugar de
     // IllegalArgumentException -> generado con IA
+    // Eliminar el try/catch de deleteTask y dejar que TaskNotFoundException sea gestionada por GlobalExceptionHandler. Mantener la respuesta HTTP 204 cuando la eliminación tenga éxito y conservar el Javadoc. — generado por IA
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        try {
-            taskService.delete(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (TaskNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        taskService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // Añadir los cinco endpoints GET de las consultas personalizadas, usando
