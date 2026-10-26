@@ -26,6 +26,8 @@ import com.accenture.taskmanager.exceptions.TaskNotFoundException;
 import com.accenture.taskmanager.model.Task;
 import com.accenture.taskmanager.service.interfaces.TaskService;
 
+import jakarta.validation.Valid;
+
 /**
  * Controlador REST encargado de gestionar las peticiones HTTP relacionadas
  * con las tareas de la aplicación.
@@ -108,8 +110,9 @@ public class TaskController {
     // Adapta createTask para recibir TaskRequestDTO, llamar a taskService.create y
     // devolver ResponseEntity<TaskResponseDTO> con estado HTTP 201 CREATED. —
     // generado por IA
+    // Añade @Valid al parámetro TaskRequestDTO del método POST para activar las validaciones antes de ejecutar el servicio. No modifiques la lógica del método ni el endpoint existente. — generado por IA
     @PostMapping
-    public ResponseEntity<TaskResponseDTO> createTask(@RequestBody TaskRequestDTO task) {
+    public ResponseEntity<TaskResponseDTO> createTask(@RequestBody @Valid TaskRequestDTO task) {
         TaskResponseDTO createdTask = taskService.create(task);
         return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     }
@@ -124,10 +127,11 @@ public class TaskController {
     // Adapta updateTask para recibir TaskRequestDTO, llamar a taskService.update y
     // devolver ResponseEntity<TaskResponseDTO> con estado HTTP 200 OK. — generado
     // por IA
+    // Añade @Valid al parámetro TaskRequestDTO del método PUT para activar las validaciones antes de ejecutar el servicio. No modifiques la lógica del método ni el endpoint existente. — generado por IA
     @PutMapping("/{id}")
     public ResponseEntity<TaskResponseDTO> updateTask(
             @PathVariable Long id,
-            @RequestBody TaskRequestDTO task) {
+            @RequestBody @Valid TaskRequestDTO task) {
 
         TaskResponseDTO updatedTask = taskService.update(id, task);
         return new ResponseEntity<>(updatedTask, HttpStatus.OK);

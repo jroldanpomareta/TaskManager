@@ -5,6 +5,12 @@ import java.util.List;
 
 import com.accenture.taskmanager.enums.TaskPriority;
 import com.accenture.taskmanager.enums.TaskStatus;
+import com.accenture.taskmanager.validation.RequiereFechaLimite;
+
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
  * Data Transfer Object for Task requests.
@@ -20,12 +26,25 @@ import com.accenture.taskmanager.enums.TaskStatus;
 // (LocalDate), con sus getters y setters, constructor vacío y constructor con
 // todos los campos. Añade Javadoc de clase y de todos los métodos. No añadas
 // validaciones. — generado por IA
+//pon la anotación @RequiereFechaLimite
+@RequiereFechaLimite
 public class TaskRequestDTO {
 
+    // Añade las anotaciones de Bean Validation definidas en el diseño previo a los campos de TaskRequestDTO, con mensajes de error en español. Conserva los campos, tipos, métodos y lógica existentes. — generado por IA
+    @NotBlank(message = "El título no puede estar vacío")
+    @Size(max = 150, message = "El título no puede superar los 150 caracteres")
     private String title;
+
+    @Size(max = 500, message = "La descripción no puede superar los 500 caracteres")
     private String description;
+
+    @NotNull(message = "El estado es obligatorio")
     private TaskStatus status;
+
+    @NotNull(message = "La prioridad es obligatoria")
     private TaskPriority priority;
+
+    @Future(message = "La fecha límite debe ser futura")
     private LocalDate dueDate;
 
     /**
