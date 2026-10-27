@@ -10,8 +10,14 @@ package com.accenture.taskmanager.dto;
 // Crear CategoryResponseDTO para devolver los datos de una categoría, con los campos id (Long), name y description (String), sus getters y setters, y Javadoc de clase y métodos. Mantener el estilo de los DTOs existentes. — generado por IA
 public class CategoryResponseDTO {
 
+    // Documenta el campo id con @Schema, indicando en español que es el identificador único de la categoría e incluyendo un ejemplo numérico representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Identificador único de la categoría", example = "1")
     private Long id;
+    // Documenta el campo name con @Schema, indicando en español que es el nombre de la categoría e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Nombre de la categoría", example = "Trabajo")
     private String name;
+    // Documenta el campo description con @Schema, indicando en español que es la descripción de la categoría e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Descripción de la categoría", example = "Tareas relacionadas con el trabajo")
     private String description;
 
     /**

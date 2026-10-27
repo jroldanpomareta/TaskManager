@@ -17,12 +17,26 @@ import com.accenture.taskmanager.enums.TaskStatus;
 //Crea la clase TaskResponseDTO para devolver los datos de una tarea al cliente. Incluye los campos id (Long), title (String), description (String), status (TaskStatus), priority (TaskPriority), dueDate (LocalDate) y createdAt (LocalDateTime). Añade getters, setters, constructor vacío y constructor con todos los campos. Incluye Javadoc de clase y todos los métodos. No añadas validaciones. — generado por IA
 public class TaskResponseDTO {
 
+    // Documenta el campo id con @Schema, indicando en español que es el identificador único de la tarea e incluyendo un ejemplo numérico representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Identificador único de la tarea", example = "1")
     private Long id;
+    // Documenta el campo title con @Schema, indicando en español que es el título de la tarea e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Título de la tarea", example = "Comprar leche")
     private String title;
+    // Documenta el campo description con @Schema, indicando en español que es la descripción de la tarea e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Descripción de la tarea", example = "Comprar leche en el supermercado")
     private String description;
+    // Documenta el campo status con @Schema, indicando en español que es el estado de la tarea e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Estado de la tarea", example = "PENDING")
     private TaskStatus status;
+    // Documenta el campo priority con @Schema, indicando en español que es la prioridad de la tarea e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Prioridad de la tarea", example = "HIGH")
     private TaskPriority priority;
+    // Documenta el campo dueDate con @Schema, indicando en español que es la fecha de vencimiento de la tarea e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Fecha de vencimiento de la tarea", example = "2027-12-31")
     private LocalDate dueDate;
+    // Documenta el campo createdAt con @Schema, indicando en español que es la fecha y hora de creación de la tarea e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Fecha y hora de creación de la tarea", example = "2027-10-01T10:00:00")
     private LocalDateTime createdAt;
 
     /**
@@ -180,6 +194,8 @@ public class TaskResponseDTO {
     }
 
     // Añadir el campo categoryName de tipo String a TaskResponseDTO para devolver el nombre de la categoría asociada a la tarea, sin exponer la entidad Category completa. La categoría puede ser null. Añadir getter, setter y Javadoc, sin modificar los campos existentes. — generado por IA
+    // Documenta el campo categoryName con @Schema, indicando en español que es el nombre de la categoría asociada a la tarea y que puede ser null si no tiene categoría. Incluye un ejemplo representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Nombre de la categoría asociada a la tarea (puede ser null si no tiene categoría)", example = "Trabajo")
     private String categoryName;
 
     /**
@@ -201,6 +217,8 @@ public class TaskResponseDTO {
     }
 
     // Añadir el campo List<TagResponseDTO> tags a TaskResponseDTO, con su getter, setter y Javadoc para el campo y ambos métodos. Importar java.util.List y com.accenture.taskmanager.dto.TagResponseDTO. Mantener todos los campos y métodos existentes sin modificarlos y conservar este comentario en el código. — generado por IA
+    // Documenta el campo tags con @Schema, indicando en español que es la lista de etiquetas asociadas a la tarea e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Lista de etiquetas asociadas a la tarea", example = "[{\"id\":1,\"name\":\"Urgente\"},{\"id\":2,\"name\":\"Importante\"}]")
     private List<TagResponseDTO> tags;
 
     /**
