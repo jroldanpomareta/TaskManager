@@ -10,7 +10,11 @@ package com.accenture.taskmanager.dto;
 // Crear CategoryRequestDTO para recibir los datos de una categoría, con los campos name y description, sus getters y setters, y Javadoc de clase y métodos. Mantener el estilo de los DTOs existentes. — generado por IA
 public class CategoryRequestDTO {
 
+    // Documenta el campo name con @Schema, indicando en español que es el nombre de la categoría e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Nombre de la categoría", example = "Trabajo")
     private String name;
+    // Documenta el campo description con @Schema, indicando en español que es la descripción de la categoría e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Descripción de la categoría", example = "Tareas relacionadas con el trabajo")
     private String description;
 
     /**

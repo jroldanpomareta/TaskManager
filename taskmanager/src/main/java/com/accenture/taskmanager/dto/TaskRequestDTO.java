@@ -31,19 +31,29 @@ import jakarta.validation.constraints.Size;
 public class TaskRequestDTO {
 
     // Añade las anotaciones de Bean Validation definidas en el diseño previo a los campos de TaskRequestDTO, con mensajes de error en español. Conserva los campos, tipos, métodos y lógica existentes. — generado por IA
+    // Documenta el campo title con @Schema, indicando en español que es el título de la tarea e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. Conserva las validaciones existentes y no modifiques la lógica. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Título de la tarea", example = "Comprar víveres")
     @NotBlank(message = "El título no puede estar vacío")
     @Size(max = 150, message = "El título no puede superar los 150 caracteres")
     private String title;
 
+    // Documenta el campo description con @Schema, indicando en español que es la descripción de la tarea e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. Conserva las validaciones existentes y no modifiques la lógica. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Descripción de la tarea", example = "Comprar víveres para la semana")
     @Size(max = 500, message = "La descripción no puede superar los 500 caracteres")
     private String description;
 
+    // Documenta el campo status con @Schema, indicando en español que representa el estado actual de la tarea e incluyendo un ejemplo válido del enum TaskStatus existente en el proyecto. Utiliza únicamente los atributos description y example. Conserva las validaciones existentes y no modifiques la lógica. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Estado actual de la tarea", example = "PENDING")
     @NotNull(message = "El estado es obligatorio")
     private TaskStatus status;
 
+    // Documenta el campo priority con @Schema, indicando en español que representa la prioridad de la tarea e incluyendo un ejemplo válido del enum TaskPriority existente en el proyecto. Utiliza únicamente los atributos description y example. Conserva las validaciones existentes y no modifiques la lógica. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Prioridad de la tarea", example = "HIGH")
     @NotNull(message = "La prioridad es obligatoria")
     private TaskPriority priority;
 
+    // Documenta el campo dueDate con @Schema, indicando en español que representa la fecha límite de la tarea e incluyendo un ejemplo representativo. Utiliza únicamente los atributos description y example. Conserva las validaciones existentes y no modifiques la lógica. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Fecha límite de la tarea", example = "2027-12-31")
     @Future(message = "La fecha límite debe ser futura")
     private LocalDate dueDate;
 
@@ -162,6 +172,8 @@ public class TaskRequestDTO {
     }
 
     // Añadir el campo categoryId de tipo Long a TaskRequestDTO para indicar la categoría de la tarea. Debe ser opcional, permitiendo crear tareas sin categoría. Añadir su getter, setter y Javadoc, sin modificar los campos existentes. — generado por IA
+    // Documenta el campo categoryId con @Schema, indicando en español que es el identificador opcional de la categoría asociada a la tarea e incluyendo un ejemplo numérico representativo. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Identificador opcional de la categoría asociada a la tarea", example = "1")
     private Long categoryId;
 
     /**
@@ -183,6 +195,8 @@ public class TaskRequestDTO {
     }
 
     // Añadir el campo List<Long> tagIds a TaskRequestDTO, con su getter y setter y Javadoc para el nuevo campo y sus métodos. Importar java.util.List y mantener todos los campos y métodos existentes sin modificarlos. Mantener este comentario en el código. — generado por IA
+    // Documenta el campo tagIds con @Schema, indicando en español que es la lista de identificadores de las etiquetas asociadas a la tarea e incluyendo un ejemplo representativo de una lista de IDs. Utiliza únicamente los atributos description y example. No modifiques la lógica existente. — generado por IA
+    @io.swagger.v3.oas.annotations.media.Schema(description = "Lista de identificadores de las etiquetas asociadas a la tarea", example = "[1, 2, 3]")
     private List<Long> tagIds;
 
     /**
