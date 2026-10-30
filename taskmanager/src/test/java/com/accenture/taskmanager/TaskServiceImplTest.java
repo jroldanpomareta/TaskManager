@@ -65,7 +65,6 @@ public class TaskServiceImplTest {
     /**
      * Javadoc for the tagRepository mock.
      */
-    @Mock
     @InjectMocks
     private TaskServiceImpl taskServiceImpl;
 

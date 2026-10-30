@@ -1,7 +1,10 @@
 package com.accenture.taskmanager.exceptions;
 
+import org.springframework.security.access.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
+
+import javax.naming.AuthenticationException;
 
 import org.springframework.data.core.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
@@ -315,4 +318,60 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    //Añade dos métodos al GlobalExceptionHandler existente, sin modificar ni duplicar los manejadores actuales. El primero debe manejar AuthenticationException y devolver HTTP 401 UNAUTHORIZED con un ErrorResponse que incluya timestamp usando LocalDateTime.now().toString(), código HTTP, descripción, mensaje genérico en español "Credenciales inválidas" y la ruta real obtenida de HttpServletRequest. El segundo debe manejar AccessDeniedException y devolver HTTP 403 FORBIDDEN con un ErrorResponse que incluya timestamp, código HTTP, descripción, mensaje en español "No tienes permisos para realizar esta operación" y la ruta real de la petición. Añade los imports necesarios y Javadoc completo para ambos métodos. Conserva el formato ErrorResponse y el resto del código. — generado por IA
+    /**
+     * Manejador para excepciones de tipo AuthenticationException.
+     * Devuelve una respuesta HTTP 401 UNAUTHORIZED con un ErrorResponse que contiene
+     * el timestamp, código HTTP, descripción del error, mensaje genérico en español
+     * y la ruta solicitada.
+     *
+     * @param e La excepción de tipo AuthenticationException.
+     * @param request La solicitud HTTP.
+     * @return Una ResponseEntity con el ErrorResponse y el código HTTP 401.
+     */
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(
+            AuthenticationException e, HttpServletRequest request) {
+
+        String message = "Credenciales inválidas.";
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now().toString(),
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                message,
+                request.getRequestURI()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
+     * Manejador para excepciones de tipo AccessDeniedException.
+     * Devuelve una respuesta HTTP 403 FORBIDDEN con un ErrorResponse que contiene
+     * el timestamp, código HTTP, descripción del error, mensaje genérico en español
+     * y la ruta solicitada.
+     *
+     * @param e La excepción de tipo AccessDeniedException.
+     * @param request La solicitud HTTP.
+     * @return Una ResponseEntity con el ErrorResponse y el código HTTP 403.
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(
+            AccessDeniedException e, HttpServletRequest request) {
+
+        String message = "No tienes permisos para realizar esta operación.";
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now().toString(),
+                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN.getReasonPhrase(),
+                message,
+                request.getRequestURI()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+
 }
